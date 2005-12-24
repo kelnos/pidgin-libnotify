@@ -1,0 +1,136 @@
+#
+# Most of this configure script was ripped from gaim or the
+# gaim-encryption configure script, thanks guys ;)
+#
+
+AC_INIT([gaim-libnotify], [0.6], [nothing])
+AC_CANONICAL_SYSTEM
+AM_CONFIG_HEADER(config.h)
+
+AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
+
+AC_PREREQ([2.50])
+
+AC_PATH_PROG(sedpath, sed)
+#
+# Setup libtool
+#
+AM_PROG_LIBTOOL
+LIBTOOL="$LIBTOOL --silent"
+
+#
+# Our header
+#
+
+AH_TOP([ /* our header */
+#ifndef _KS_CONFIG_H
+#define _KS_CONFIG_H
+])
+AH_BOTTOM([
+#endif /* _KS_CONFIG_H */
+])
+
+#
+# Setup gettext
+#
+ALL_LINGUAS="es pt"
+AM_GNU_GETTEXT_VERSION(0.10.40)
+AM_GNU_GETTEXT
+
+#
+# Look for the C compiler
+#
+CFLAGS_save="$CFLAGS"
+AC_PROG_CC
+CFLAGS="$CFLAGS_save"
+
+AC_ARG_ENABLE(debug,   [  --enable-debug          compile with debugging support],,enable_debug=no)
+
+if test "x$enable_debug" = "xyes" ; then
+	AC_DEFINE(DEBUG, 1, [Define if debugging is enabled.])
+fi
+
+AC_ARG_ENABLE(deprecated,	[  --disable-deprecated    compile without deprecated API usage],,enable_deprecated=yes)
+
+if test "x$enable_deprecated" = no; then
+	DEBUG_CFLAGS = "$DEBUG_CFLAGS -DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
+fi
+AC_SUBST(DEBUG_CFLAGS)
+
+if test "x$GCC" = "xyes"; then
+	CFLAGS="$CFLAGS -Wall -g3"
+fi
+AC_SUBST(CFLAGS)
+
+#
+# Check for libnotify
+#
+
+PKG_CHECK_MODULES(LIBNOTIFY, libnotify >= 0.3.0)
+
+AC_SUBST(LIBNOTIFY_CFLAGS)
+AC_SUBST(LIBNOTIFY_LIBS)
+
+# TODO: file a bug with gaim and remove this
+#
+# Check for GTK+
+#
+PKG_CHECK_MODULES(GTK, gtk+-2.0)
+
+AC_SUBST(GTK_CFLAGS)
+AC_SUBST(GTK_LIBS)
+
+#
+# Check for gaim
+#
+
+PKG_CHECK_MODULES(GAIM, gaim >= 2.0.0,
+[
+	AC_DEFINE(HAVE_GAIM, 1, [Define if we've found gaim.])
+])
+
+AC_SUBST(GAIM_CFLAGS)
+GAIM_LIBDIR=`pkg-config --variable=libdir gaim`
+GAIM_DATADIR=`pkg-config --variable=datadir gaim`
+AC_SUBST(GAIM_LIBDIR)
+AC_SUBST(GAIM_DATADIR)
+
+#
+# Check if plugins are enabled
+#
+want_plugins=yes
+AM_CONDITIONAL(PLUGINS, test "$want_plugins" = "yes")
+
+#
+# Version stuff
+#
+AC_CONFIG_COMMANDS_PRE([
+	if test -e VERSION; then
+		cp -p VERSION VERSION.ac-save
+	fi
+])
+
+AC_CONFIG_COMMANDS_POST([
+	cmp VERSION VERSION.ac-save || touch -r VERSION.ac-save VERSION
+	rm -f VERSION.ac-save
+])
+
+#
+# Finish up
+#
+AC_OUTPUT([Makefile
+		   VERSION
+		   intl/Makefile
+		   po/Makefile.in
+		   src/Makefile
+		  ])
+
+echo;
+echo Configuration complete
+echo;
+echo Debugging enabled..............: $enable_debug
+echo Deprecated API enabled.........: $enable_deprecated
+echo;
+echo Type make to compile
+echo Thank you for using gaim-libnotify
+echo;

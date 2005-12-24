@@ -1,0 +1,12 @@
+gaim-libnotify
+
+About
+=====
+Gaim-libnotify provides a libnotify interface to Gaim
+
+INSTALL
+=======
+./configure --with-gaim=PATH/TO/GAIM
+make
+make install
+

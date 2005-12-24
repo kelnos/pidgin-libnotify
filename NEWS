@@ -1,0 +1,34 @@
+0.6
+==
+
+* Update to libnotify 0.3.x and gaim 2.0.0
+* Icon lost due to libnotify buggyness
+
+0.5
+==
+
+* Use same notification for same buddy.
+* Add avatar support with help from Ezequiel Pérez.
+
+0.4
+==
+
+* Add i18n framework based on patch by Ezequiel Pérez and Guifications code
+* Add es translation (Ezequiel Pérez)
+* Add pt translation (Duarte Henriques)
+
+0.3
+==
+
+Now opens the conversation when the notification is clicked, thanks
+to Ezequiel Pérez.
+
+0.2
+==
+
+Update to new libnotify API.
+
+0.1
+==
+
+Initial release.

@@ -1,0 +1,38 @@
+2005-12-24  Duarte Henriques <duarte.henriques@gmail.com>
+
+	* src/gaim-libnotify.c: Update to libnotify 0.3.x and gaim 2.0.0
+
+2005-07-09  Duarte Henriques <duarte.henriques@gmail.com>
+
+	* src/gaim-libnotify.c: Add hash_table for buddies, so that the
+	  same handle is used for the same buddy.
+
+2005-07-09  Duarte Henriques <duarte.henriques@gmail.com>
+
+	* src/gaim-libnotify.c: Add avatar support with help from Ezequiel
+	  Pérez.
+
+2005-07-09  Duarte Henriques <duarte.henriques@gmail.com>
+
+	* configure.ac:
+	* Makefile.am:
+	* setup-gettext:
+	* src/gaim-libnotify.c:
+	* src/gln-intl.h:
+	* intl:
+	* po:
+	* po/ChangeLog:
+	  Add i18n support to gaim-libnotify, based on patch from Ezequiel
+	  Pérez
+	* autogen.sh:
+	  Add i18n support, taken from guifications
+
+2005-07-08  Duarte Henriques <duarte.henriques@gmail.com>
+
+	* src/gaim-libnotify.c: (notify_cb): Adapted from patch by Ezequiel
+	  Pérez to provide an action callback - opens the conversation.
+	  Thanks Ezequiel!
+
+2005-07-07  Duarte Henriques  <duarte.henriques@gmail.com>
+
+	* src/gaim-libnotify.c: Adapt to new libnotify API.
