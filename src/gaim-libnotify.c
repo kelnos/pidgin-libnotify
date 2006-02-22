@@ -181,30 +181,35 @@ best_icon (GaimBuddy *buddy)
 
 static void
 action_cb (NotifyNotification *notification,
-		   gchar *action)
+		   gchar *action, gpointer user_data)
 {
-	/*GaimBuddy *buddy = NULL;
+	GaimBuddy *buddy = NULL;
 	GaimConversation *conv = NULL;
-	GaimConvWindow *win = NULL;*/
+	/*GaimConvWindow *win = NULL;*/
 
-	gaim_debug_info (PLUGIN_ID, "notify_cb(), "
+	gaim_debug_info (PLUGIN_ID, "action_cb(), "
 					"notification: 0x%x, action: '%s'", notification, action);
 
-#if 0
+#if 0 /* old libnotify */
+	buddy = (GaimBuddy *)notify_notification_get_user_data (notification);
+#else
 	buddy = (GaimBuddy *)user_data;
+#endif
 
 	if (!buddy) {
 		gaim_debug_warning (PLUGIN_ID, "Got no buddy!");
 		return;
 	}
 
-	conv = gaim_find_conversation_with_account (buddy->name, buddy->account);
+	conv = gaim_find_conversation_with_account (GAIM_CONV_TYPE_ANY, buddy->name, buddy->account);
 
 	if (!conv) {
-		conv = gaim_conversation_new (GAIM_CONV_IM,
+		conv = gaim_conversation_new (GAIM_CONV_TYPE_IM,
 									  buddy->account,
 									  buddy->name);
 	}
+	conv->ui_ops->present(conv);
+#if 0
 	win = gaim_conversation_get_window (conv);
 
 	if (win) {
@@ -223,15 +228,17 @@ action_cb (NotifyNotification *notification,
 }
 
 static gboolean
-closed_cb (NotifyNotification *notification) {
-	GaimBuddy *buddy;
+closed_cb (NotifyNotification *notification)
+{
+	/*GaimBuddy *buddy;*/
 
 	gaim_debug_info (PLUGIN_ID, "closed_cb(), notification: 0x%x\n", notification);
 
 	/* BUGGY notification
-	buddy = (GAIM_BUDDY)notify_notification_get_user_data (notification);
-	g_hash_table_remove (buddy_hash, buddy)
+	buddy = (GaimBuddy *)notify_notification_get_user_data (notification);
+	g_hash_table_remove (buddy_hash, buddy);
 	*/
+	g_object_unref(G_OBJECT(notification));
 
 	return FALSE;
 }
@@ -242,13 +249,9 @@ notify (const gchar *title,
 		GaimBuddy *buddy)
 {
 	NotifyNotification *notification = NULL;
-	GdkPixbuf *icon;
+	GdkPixbuf *icon;gchar *icon_uri;
 	gchar *text;
 	/*GError **error;*/
-
-	gaim_debug_info (PLUGIN_ID, "notify(), "
-					 "title: '%s', body: '%s', buddy: '%s'\n",
-					 title, body, best_name(buddy));
 
 	if (strlen (body) > 60) {
 		gchar *str;
@@ -263,13 +266,21 @@ notify (const gchar *title,
 	notification = g_hash_table_lookup (buddy_hash, buddy);
 	
 	if (notification != NULL) {
-		notify_notification_update (title, body, NULL, NULL);
+		notify_notification_update (notification, title, body, NULL);
 		return;
 	}
 	*/
 
-	notification = notify_notification_new (title, text, NULL, NULL);
+	icon_uri = get_prpl_icon_uri (buddy->account);
+
+	gaim_debug_info (PLUGIN_ID, "notify(), "
+					 "title: '%s', body: '%s', buddy: '%s', icon_uri: '%s'\n",
+					 title, text, best_name(buddy), icon_uri);
+
+	notification = notify_notification_new (title, text, icon_uri, NULL);
 	g_free (text);
+	if (icon_uri)
+		g_free (icon_uri);
 
 	g_hash_table_insert (buddy_hash, buddy, notification);
 
@@ -279,17 +290,17 @@ notify (const gchar *title,
 
 	g_signal_connect (notification, "closed", G_CALLBACK(closed_cb), NULL);
 
-	/* BUGGY notification
 	icon = best_icon (buddy);
-	notify_notification_set_icon_data_from_pixbuf (notification, icon);
+	notify_notification_set_icon_from_pixbuf (notification, icon);
 	g_object_unref (icon);
-	*/
 
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_NORMAL);
 
-	notify_notification_add_action (notification, "show", _("Show"), action_cb);
+	notify_notification_add_action (notification, "show", _("Show"), action_cb, buddy, NULL);
 
-	notify_notification_show (notification, NULL);
+	if (!notify_notification_show (notification, NULL)) {
+		gaim_debug_error (PLUGIN_ID, "notify(), failed to send notification\n");
+	}
 
 }
 
@@ -319,7 +330,8 @@ notify_msg_sent (GaimAccount *account,
 	gchar *title, *body, *name;
 
 	buddy = gaim_find_buddy (account, sender);
-	g_return_if_fail (buddy);
+	if (!buddy)
+		return;
 
 	name = best_name (buddy);
 
@@ -374,20 +386,11 @@ static gboolean
 plugin_load (GaimPlugin *plugin)
 {
 	void *conv_handle, *blist_handle, *conn_handle;
-	/*DBusConnection *conn;*/
 
 	if (!notify_is_initted () && !notify_init ("Gaim")) {
 		gaim_debug_error (PLUGIN_ID, "libnotify not running!\n");
 		return FALSE;
 	}
-
-	/* TODO: remove after libnotify bug is accepted */
-	/*conn = dbus_bus_get (DBUS_BUS_SESSION, NULL);
-	if (conn == NULL) {
-		gaim_debug_error (PLUGIN_ID, "Cannot find DBus address!\n");
-		return FALSE;
-	}
-	dbus_connection_setup_with_g_main (conn, NULL);*/
 
 	conv_handle = gaim_conversations_get_handle ();
 	blist_handle = gaim_blist_get_handle ();
@@ -433,9 +436,6 @@ plugin_unload (GaimPlugin *plugin)
 						GAIM_CALLBACK(event_connection_throttle));
 
 	g_hash_table_destroy (buddy_hash);
-
-	/* TODO: remove after libnotify bug is accepted */
-	/* TODO: close DBus connection (how?) */
 
 	notify_uninit ();
 
