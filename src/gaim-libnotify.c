@@ -32,7 +32,7 @@
 #include "debug.h"
 #include "util.h"
 
-/* TODO: file a bug with gaim and remove this */
+/* see get_prpl_icon_uri */
 #include "gtkconv.h"
 
 #include <libnotify/notify.h>
@@ -42,6 +42,32 @@
 #define PLUGIN_ID "gaim-libnotify"
 
 static GHashTable *buddy_hash;
+
+static GaimPluginPrefFrame *
+get_plugin_pref_frame (GaimPlugin *plugin)
+{
+	GaimPluginPrefFrame *frame;
+	GaimPluginPref *ppref;
+
+	frame = gaim_plugin_pref_frame_new ();
+
+	ppref = gaim_plugin_pref_new_with_name_and_label (
+                            "/plugins/gtk/libnotify/newmsg",
+                            _("New Messages"));
+	gaim_plugin_pref_frame_add (frame, ppref);
+
+	ppref = gaim_plugin_pref_new_with_name_and_label (
+                            "/plugins/gtk/libnotify/newconvonly",
+                            _("Only new conversations"));
+	gaim_plugin_pref_frame_add (frame, ppref);
+
+	ppref = gaim_plugin_pref_new_with_name_and_label (
+                            "/plugins/gtk/libnotify/signon",
+                            _("Buddy Sign-on"));
+	gaim_plugin_pref_frame_add (frame, ppref);
+
+	return frame;
+}
 
 /* Imported from gtkblist.c +4928, do not touch!
  * bug filed, this should be core API
@@ -305,18 +331,22 @@ notify (const gchar *title,
 }
 
 static void
-notify_event_buddy_cb (GaimBuddy *buddy, gpointer data)
+notify_buddy_signon_cb (GaimBuddy *buddy,
+						gpointer data)
 {
 	gchar *title;
 
 	g_return_if_fail (buddy);
 
+	if (!gaim_prefs_get_bool ("/plugins/gtk/libnotify/signon"))
+		return;
+
 	if (g_list_find (just_signed_on_accounts, buddy->account))
 		return;
 
-	title = g_strdup_printf (_("%s signed on"), best_name (buddy));
+	title = best_name (buddy);
 
-	notify (title, "", buddy);
+	notify (title, _("has signed on"), buddy);
 
 	g_free (title);
 }
@@ -352,12 +382,22 @@ notify_new_message_cb (GaimAccount *account,
 					   gpointer data)
 {
 	GaimConversation *conv;
+	gboolean newconvonly;
+
+	if (!gaim_prefs_get_bool ("/plugins/gtk/libnotify/newmsg"))
+		return;
 
 	conv = gaim_find_conversation_with_account (GAIM_CONV_TYPE_IM, sender, account);
 
-	/* XXX commented for debug */
-	/*if (conv && gaim_conversation_has_focus (conv))
-		return;*/
+	if (conv && gaim_conversation_has_focus (conv))
+		return;
+
+	newconvonly = gaim_prefs_get_bool ("/plugins/gtk/libnotify/newconvonly");
+
+	if (newconvonly && gaim_conversation_get_send_history (conv)) {
+		gaim_debug_info (PLUGIN_ID, "Conversation is not new 0x%x\n", conv);
+		return;
+	}
 
 	notify_msg_sent (account, sender, message);
 }
@@ -399,7 +439,7 @@ plugin_load (GaimPlugin *plugin)
 	buddy_hash = g_hash_table_new (NULL, NULL);
 
 	gaim_signal_connect (blist_handle, "buddy-signed-on", plugin,
-						GAIM_CALLBACK(notify_event_buddy_cb), NULL);
+						GAIM_CALLBACK(notify_buddy_signon_cb), NULL);
 	
 	gaim_signal_connect (conv_handle, "received-im-msg", plugin,
 						GAIM_CALLBACK(notify_new_message_cb), NULL);
@@ -424,7 +464,7 @@ plugin_unload (GaimPlugin *plugin)
 	conn_handle = gaim_connections_get_handle();
 
 	gaim_signal_disconnect (blist_handle, "buddy-signed-on", plugin,
-							GAIM_CALLBACK(notify_event_buddy_cb));
+							GAIM_CALLBACK(notify_buddy_signon_cb));
 
 	gaim_signal_disconnect (conv_handle, "received-im-msg", plugin,
 							GAIM_CALLBACK(notify_new_message_cb));
@@ -442,12 +482,18 @@ plugin_unload (GaimPlugin *plugin)
 	return TRUE;
 }
 
+static GaimPluginUiInfo prefs_info = {
+    get_plugin_pref_frame,
+    0,						/* page num (Reserved) */
+    NULL					/* frame (Reserved) */
+};
+
 static GaimPluginInfo info = {
     GAIM_PLUGIN_MAGIC,										/* api version */
     GAIM_MAJOR_VERSION,
     GAIM_MINOR_VERSION,
     GAIM_PLUGIN_STANDARD,									/* type */
-    NULL,													/* ui requirement */
+    0,														/* ui requirement */
     0,														/* flags */
     NULL,													/* dependencies */
     GAIM_PRIORITY_DEFAULT,									/* priority */
@@ -459,14 +505,14 @@ static GaimPluginInfo info = {
     NULL,													/* description */
     
     "Duarte Henriques <duarte.henriques@gmail.com>",		/* author */
-    "http://sf.net/projects/gaim-libnotify/",				/* homepage */
+    "http://sourceforge.net/projects/gaim-libnotify/",		/* homepage */
     
     plugin_load,			/* load */
     plugin_unload,			/* unload */
     NULL,					/* destroy */
     NULL,					/* ui info */
     NULL,					/* extra info */
-    NULL					/* actions info */
+    &prefs_info				/* prefs info */
 };
 
 static void
@@ -477,7 +523,12 @@ init_plugin (GaimPlugin *plugin)
 
 	info.name = _("Libnotify Interface");
 	info.summary = _("Displays popups via libnotify.");
-	info.description = _("Displays popups via libnotify.");
+	info.description = _("Gaim-libnotify:\nDisplays popups via libnotify.");
+
+	gaim_prefs_add_none ("/plugins/gtk/libnotify");
+	gaim_prefs_add_bool ("/plugins/gtk/libnotify/newmsg", TRUE);
+	gaim_prefs_add_bool ("/plugins/gtk/libnotify/newconvonly", TRUE);
+	gaim_prefs_add_bool ("/plugins/gtk/libnotify/signon", TRUE);
 }
 
 GAIM_INIT_PLUGIN(notify, init_plugin, info)
