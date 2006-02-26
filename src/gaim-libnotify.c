@@ -459,7 +459,7 @@ static GaimPluginInfo info = {
     NULL,													/* description */
     
     "Duarte Henriques <duarte.henriques@gmail.com>",		/* author */
-    "http://dsgh.no-ip.org/gaim-libnotify/",				/* homepage */
+    "http://sf.net/projects/gaim-libnotify/",				/* homepage */
     
     plugin_load,			/* load */
     plugin_unload,			/* unload */
