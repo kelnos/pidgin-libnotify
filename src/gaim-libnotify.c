@@ -32,8 +32,8 @@
 #include "debug.h"
 #include "util.h"
 
-/* see get_prpl_icon_uri */
-#include "gtkconv.h"
+/* for gaim_gtk_create_prpl_icon */
+#include "gtkutils.h"
 
 #include <libnotify/notify.h>
 
@@ -67,37 +67,6 @@ get_plugin_pref_frame (GaimPlugin *plugin)
 	gaim_plugin_pref_frame_add (frame, ppref);
 
 	return frame;
-}
-
-/* Imported from gtkblist.c +4928, do not touch!
- * bug filed, this should be core API
- * Note: code that calls this must g_free() the uri */
-static gchar *
-get_prpl_icon_uri (GaimAccount *account)
-{
-	GaimPlugin *prpl;
-	GaimPluginProtocolInfo *prpl_info = NULL;
-	const char *protoname = NULL;
-	char buf[256];
-
-	g_return_val_if_fail (account != NULL, NULL);
-
-	prpl = gaim_find_prpl (gaim_account_get_protocol_id(account));
-
-	if (prpl != NULL) {
-		prpl_info = GAIM_PLUGIN_PROTOCOL_INFO(prpl);
-
-		if (prpl_info->list_icon != NULL)
-			protoname = prpl_info->list_icon(account, NULL);
-	}
-
-	if (protoname == NULL)
-		return NULL;
-
-	g_snprintf(buf, sizeof(buf), "%s.png", protoname);
-
-	return g_build_filename(DATADIR, "pixmaps", "gaim", "status",
-								"default", buf, NULL);
 }
 
 /* Signon flood be gone! - thanks to the guifications devs */
@@ -141,6 +110,7 @@ event_connection_throttle (GaimConnection *gc, gpointer data)
 	g_timeout_add (5000, event_connection_throttle_cb, (gpointer)account);
 }
 
+/* do NOT g_free() the string returned by this function */
 static gchar *
 best_name (GaimBuddy *buddy)
 {
@@ -154,54 +124,33 @@ best_name (GaimBuddy *buddy)
 }
 
 static GdkPixbuf *
-best_icon (GaimBuddy *buddy)
+pixbuf_from_buddy_icon (GaimBuddyIcon *buddy_icon)
 {
 	GdkPixbuf *icon;
-#if 0
-	GaimBuddyIcon *buddy_icon;
 
-	buddy_icon = gaim_buddy_icons_find (buddy->account, buddy->name);
-	if (buddy_icon) {
-		const guchar *data;
-		size_t len;
-		GdkPixbufLoader *loader;
-		const char *type;
-		
-		/*g_signal_connect (loader, "area-prepared", G_CALLBACK(whatever));*/
-		
-		type = gaim_buddy_icon_get_type (buddy_icon);
-		g_print ("BUDDYICON 1\n");
-		data = gaim_buddy_icon_get_data (buddy_icon, &len);
-		g_print ("BUDDYICON 2\n");
-		loader = gdk_pixbuf_loader_new_with_type (type, NULL);
-		g_print ("BUDDYICON 3\n");
-		gdk_pixbuf_loader_write (loader, data, len, NULL);
-		g_print ("BUDDYICON 4\n");
-		gdk_pixbuf_loader_close (loader, NULL);
-		g_print ("BUDDYICON 5\n");
-		icon = gdk_pixbuf_loader_get_pixbuf (loader);
-		g_print ("BUDDYICON 6\n");
-		g_object_ref (icon);
-		g_print ("BUDDYICON 7\n");
-		g_free (loader);
-		/*icon = gdk_pixbuf_new_from_data (data, cs, TRUE, 24, 96, 96, rs);*/
-	} else {
-		gchar *icon_uri;
-		icon_uri = get_prpl_icon_uri (buddy->account);
-		if (icon_uri) {
-			icon = gdk_pixbuf_new_from_file (icon_uri, NULL);
-		} else {
-			icon = NULL;
-		}
-		g_free (icon_uri);
-	}
-#endif
+	const guchar *data;
+	size_t len;
+	GdkPixbufLoader *loader;
+	const char *type;
 
-	gchar *icon_uri;
-	icon_uri = g_build_filename (DATADIR, "pixmaps", "gaim", "status",
-								"default", "msn.png", NULL);
-	icon = gdk_pixbuf_new_from_file (icon_uri, NULL);
+	/*g_signal_connect (loader, "area-prepared", G_CALLBACK(whatever));*/
 
+	type = gaim_buddy_icon_get_type (buddy_icon);
+	g_print ("BUDDYICON 1\n");
+	data = gaim_buddy_icon_get_data (buddy_icon, &len);
+	g_print ("BUDDYICON 2\n");
+	loader = gdk_pixbuf_loader_new_with_type (type, NULL);
+	g_print ("BUDDYICON 3\n");
+	gdk_pixbuf_loader_write (loader, data, len, NULL);
+	g_print ("BUDDYICON 4\n");
+	gdk_pixbuf_loader_close (loader, NULL);
+	g_print ("BUDDYICON 5\n");
+	icon = gdk_pixbuf_loader_get_pixbuf (loader);
+	g_print ("BUDDYICON 6\n");
+	g_object_ref (icon);
+	g_print ("BUDDYICON 7\n");
+	g_free (loader);
+	/*icon = gdk_pixbuf_new_from_data (data, cs, TRUE, 24, 96, 96, rs);*/
 	return icon;
 }
 
@@ -216,11 +165,7 @@ action_cb (NotifyNotification *notification,
 	gaim_debug_info (PLUGIN_ID, "action_cb(), "
 					"notification: 0x%x, action: '%s'", notification, action);
 
-#if 0 /* old libnotify */
-	buddy = (GaimBuddy *)notify_notification_get_user_data (notification);
-#else
-	buddy = (GaimBuddy *)user_data;
-#endif
+	buddy = (GaimBuddy *)g_object_get_data (G_OBJECT(notification), "buddy");
 
 	if (!buddy) {
 		gaim_debug_warning (PLUGIN_ID, "Got no buddy!");
@@ -234,7 +179,8 @@ action_cb (NotifyNotification *notification,
 									  buddy->account,
 									  buddy->name);
 	}
-	conv->ui_ops->present(conv);
+	/* not working now, this doesn't raise the window */
+	conv->ui_ops->present (conv);
 #if 0
 	win = gaim_conversation_get_window (conv);
 
@@ -256,15 +202,15 @@ action_cb (NotifyNotification *notification,
 static gboolean
 closed_cb (NotifyNotification *notification)
 {
-	/*GaimBuddy *buddy;*/
+	GaimBuddy *buddy;
 
 	gaim_debug_info (PLUGIN_ID, "closed_cb(), notification: 0x%x\n", notification);
 
-	/* BUGGY notification
-	buddy = (GaimBuddy *)notify_notification_get_user_data (notification);
-	g_hash_table_remove (buddy_hash, buddy);
-	*/
-	g_object_unref(G_OBJECT(notification));
+	buddy = (GaimBuddy *)g_object_get_data (G_OBJECT(notification), "buddy");
+	if (buddy)
+		g_hash_table_remove (buddy_hash, buddy);
+
+	g_object_unref (G_OBJECT(notification));
 
 	return FALSE;
 }
@@ -275,9 +221,9 @@ notify (const gchar *title,
 		GaimBuddy *buddy)
 {
 	NotifyNotification *notification = NULL;
-	GdkPixbuf *icon;gchar *icon_uri;
+	GdkPixbuf *icon;
+	GaimBuddyIcon *buddy_icon;
 	gchar *text;
-	/*GError **error;*/
 
 	if (strlen (body) > 60) {
 		gchar *str;
@@ -288,41 +234,43 @@ notify (const gchar *title,
 		text = g_strdup (body);
 	}
 
-	/* BUGGY notification
+	gaim_debug_info (PLUGIN_ID, "notify(), "
+					 "title: '%s', body: '%s', buddy: '%s'\n",
+					 title, text, best_name (buddy));
+
 	notification = g_hash_table_lookup (buddy_hash, buddy);
-	
+
 	if (notification != NULL) {
-		notify_notification_update (notification, title, body, NULL);
+		notify_notification_update (notification, title, text, NULL);
+		g_free (text);
 		return;
 	}
-	*/
-
-	icon_uri = get_prpl_icon_uri (buddy->account);
-
-	gaim_debug_info (PLUGIN_ID, "notify(), "
-					 "title: '%s', body: '%s', buddy: '%s', icon_uri: '%s'\n",
-					 title, text, best_name(buddy), icon_uri);
-
-	notification = notify_notification_new (title, text, icon_uri, NULL);
+	notification = notify_notification_new (title, text, NULL, NULL);
 	g_free (text);
-	if (icon_uri)
-		g_free (icon_uri);
+
+	buddy_icon = gaim_buddy_get_icon (buddy);
+	if (buddy_icon) {
+		icon = pixbuf_from_buddy_icon (buddy_icon);
+	} else {
+		icon = gaim_gtk_create_prpl_icon (buddy->account);
+	}
+
+	notification = notify_notification_new (title, text, NULL, NULL);
+
+	if (icon) {
+		notify_notification_set_icon_from_pixbuf (notification, icon);
+		g_object_unref (icon);
+	}
 
 	g_hash_table_insert (buddy_hash, buddy, notification);
 
-	/* BUGGY notification
-	notify_notification_set_user_data (notification, &buddy, NULL);
-	*/
+	g_object_set_data (G_OBJECT(notification), "buddy", buddy);
 
 	g_signal_connect (notification, "closed", G_CALLBACK(closed_cb), NULL);
 
-	icon = best_icon (buddy);
-	notify_notification_set_icon_from_pixbuf (notification, icon);
-	g_object_unref (icon);
-
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_NORMAL);
 
-	notify_notification_add_action (notification, "show", _("Show"), action_cb, buddy, NULL);
+	notify_notification_add_action (notification, "show", _("Show"), action_cb, NULL, NULL);
 
 	if (!notify_notification_show (notification, NULL)) {
 		gaim_debug_error (PLUGIN_ID, "notify(), failed to send notification\n");
@@ -347,8 +295,6 @@ notify_buddy_signon_cb (GaimBuddy *buddy,
 	title = best_name (buddy);
 
 	notify (title, _("has signed on"), buddy);
-
-	g_free (title);
 }
 
 static void
@@ -421,7 +367,6 @@ notify_chat_nick (GaimAccount *account,
 	notify_msg_sent (account, sender, message);
 }
 
-void *gaim_dbus_get_handle(void);
 static gboolean
 plugin_load (GaimPlugin *plugin)
 {
@@ -527,7 +472,7 @@ init_plugin (GaimPlugin *plugin)
 
 	gaim_prefs_add_none ("/plugins/gtk/libnotify");
 	gaim_prefs_add_bool ("/plugins/gtk/libnotify/newmsg", TRUE);
-	gaim_prefs_add_bool ("/plugins/gtk/libnotify/newconvonly", TRUE);
+	gaim_prefs_add_bool ("/plugins/gtk/libnotify/newconvonly", FALSE);
 	gaim_prefs_add_bool ("/plugins/gtk/libnotify/signon", TRUE);
 }
 

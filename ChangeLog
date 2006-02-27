@@ -1,3 +1,8 @@
+2006-02-27  Duarte Henriques <duarte.henriques@gmail.com>
+
+	* src/gaim-libnotify.c: Refactor of icon code, [s|g]et_user_data
+	  converted to gobject_[s|g]et_data. Untested.
+
 2006-02-26  Carl Van Tonder <carlishere@hotmail.com>
 
 	* src/gaim-libnotify.c: Add Preferences: newmsg, convonly and signon.
