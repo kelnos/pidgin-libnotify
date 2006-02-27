@@ -63,7 +63,7 @@ get_plugin_pref_frame (GaimPlugin *plugin)
 
 	ppref = gaim_plugin_pref_new_with_name_and_label (
                             "/plugins/gtk/libnotify/signon",
-                            _("Buddy Sign-on"));
+                            _("Buddy signs on"));
 	gaim_plugin_pref_frame_add (frame, ppref);
 
 	return frame;
@@ -133,22 +133,22 @@ pixbuf_from_buddy_icon (GaimBuddyIcon *buddy_icon)
 	GdkPixbufLoader *loader;
 	const char *type;
 
-	/*g_signal_connect (loader, "area-prepared", G_CALLBACK(whatever));*/
-
 	type = gaim_buddy_icon_get_type (buddy_icon);
-	g_print ("BUDDYICON 1\n");
+	/*g_print ("BUDDYICON 1\n");*/
 	data = gaim_buddy_icon_get_data (buddy_icon, &len);
-	g_print ("BUDDYICON 2\n");
+	/*g_print ("BUDDYICON 2\n");*/
 	loader = gdk_pixbuf_loader_new_with_type (type, NULL);
-	g_print ("BUDDYICON 3\n");
+	/*g_print ("BUDDYICON 3\n");*/
+	gdk_pixbuf_loader_set_size (loader, 48, 48);
+	/*g_print ("BUDDYICON 4\n");*/
 	gdk_pixbuf_loader_write (loader, data, len, NULL);
-	g_print ("BUDDYICON 4\n");
+	/*g_print ("BUDDYICON 5\n");*/
 	gdk_pixbuf_loader_close (loader, NULL);
-	g_print ("BUDDYICON 5\n");
+	/*g_print ("BUDDYICON 6\n");*/
 	icon = gdk_pixbuf_loader_get_pixbuf (loader);
-	g_print ("BUDDYICON 6\n");
+	/*g_print ("BUDDYICON 7\n");*/
 	g_object_ref (icon);
-	g_print ("BUDDYICON 7\n");
+	/*g_print ("BUDDYICON 8\n");*/
 	g_free (loader);
 	/*icon = gdk_pixbuf_new_from_data (data, cs, TRUE, 24, 96, 96, rs);*/
 	return icon;
@@ -215,6 +215,22 @@ closed_cb (NotifyNotification *notification)
 	return FALSE;
 }
 
+/* you must g_free the returned string */
+static gchar *
+truncate_string (const gchar *str, int num_chars)
+{
+	gchar *truncated_str;
+
+	if (strlen (str) > num_chars) {
+		gchar *str2 = g_strndup (str, num_chars-2);
+		truncated_str = g_strdup_printf ("%s..", str2);
+		g_free (str2);
+	} else {
+		truncated_str = g_strdup (str);
+	}
+	return truncated_str;
+}
+
 static void
 notify (const gchar *title,
 		const gchar *body,
@@ -223,30 +239,26 @@ notify (const gchar *title,
 	NotifyNotification *notification = NULL;
 	GdkPixbuf *icon;
 	GaimBuddyIcon *buddy_icon;
-	gchar *text;
+	gchar *tr_body;
 
-	if (strlen (body) > 60) {
-		gchar *str;
-		str = g_strndup (body, 58);
-		text = g_strdup_printf ("%s..", str);
-		g_free (str);
-	} else {
-		text = g_strdup (body);
-	}
+	if (body)
+		tr_body = truncate_string (body, 60);
+	else
+		tr_body = NULL;
 
 	gaim_debug_info (PLUGIN_ID, "notify(), "
 					 "title: '%s', body: '%s', buddy: '%s'\n",
-					 title, text, best_name (buddy));
+					 title, tr_body, best_name (buddy));
 
 	notification = g_hash_table_lookup (buddy_hash, buddy);
 
 	if (notification != NULL) {
-		notify_notification_update (notification, title, text, NULL);
-		g_free (text);
+		notify_notification_update (notification, title, tr_body, NULL);
+		g_free (tr_body);
 		return;
 	}
-	notification = notify_notification_new (title, text, NULL, NULL);
-	g_free (text);
+	notification = notify_notification_new (title, tr_body, NULL, NULL);
+	g_free (tr_body);
 
 	buddy_icon = gaim_buddy_get_icon (buddy);
 	if (buddy_icon) {
@@ -254,8 +266,6 @@ notify (const gchar *title,
 	} else {
 		icon = gaim_gtk_create_prpl_icon (buddy->account);
 	}
-
-	notification = notify_notification_new (title, text, NULL, NULL);
 
 	if (icon) {
 		notify_notification_set_icon_from_pixbuf (notification, icon);
@@ -292,9 +302,11 @@ notify_buddy_signon_cb (GaimBuddy *buddy,
 	if (g_list_find (just_signed_on_accounts, buddy->account))
 		return;
 
-	title = best_name (buddy);
+	title = g_strdup_printf (_("%s signed on"), best_name (buddy));
 
-	notify (title, _("has signed on"), buddy);
+	notify (title, NULL, buddy);
+
+	g_free (title);
 }
 
 static void

@@ -3,7 +3,7 @@
 # gaim-encryption configure script, thanks guys ;)
 #
 
-AC_INIT([gaim-libnotify], [0.6], [nothing])
+AC_INIT([gaim-libnotify], [0.7], [nothing])
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 
@@ -71,7 +71,6 @@ PKG_CHECK_MODULES(LIBNOTIFY, libnotify >= 0.3.0)
 AC_SUBST(LIBNOTIFY_CFLAGS)
 AC_SUBST(LIBNOTIFY_LIBS)
 
-# TODO: file a bug with gaim and remove this
 #
 # Check for GTK+
 #

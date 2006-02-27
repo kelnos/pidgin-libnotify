@@ -1,5 +1,5 @@
 # Portuguese (pt) translation of gaim-libnotify.
-# Copyright (C) 2005, Duarte Henriques <duarte_henriques@gmail.com>
+# Copyright (C) 2005-2006, Duarte Henriques <duarte.henriques@gmail.com>
 #
 # This file is distributed under the same license as gaim-libnotify.
 #
@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gaim-libnotify\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-02-26 23:37+0000\n"
-"PO-Revision-Date: 2005-07-08 12:30-0300\n"
+"POT-Creation-Date: 2006-02-27 13:22+0000\n"
+"PO-Revision-Date: 2006-02-27 12:30+0000\n"
 "Last-Translator: Duarte Henriques <duarte.henriques@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -25,31 +25,32 @@ msgid "Only new conversations"
 msgstr "Apenas novas conversações"
 
 #: src/gaim-libnotify.c:66
-msgid "Buddy Sign-on"
+msgid "Buddy signs on"
 msgstr "Contacto liga-se"
 
-#: src/gaim-libnotify.c:325
+#: src/gaim-libnotify.c:280
 msgid "Show"
 msgstr "Mostrar"
 
-#: src/gaim-libnotify.c:349
-msgid "has signed on"
-msgstr "ligou-se"
+#: src/gaim-libnotify.c:302
+#, c-format
+msgid "%s signed on"
+msgstr "%s ligou-se"
 
-#: src/gaim-libnotify.c:368
+#: src/gaim-libnotify.c:323
 #, c-format
 msgid "%s says:"
 msgstr "%s diz:"
 
-#: src/gaim-libnotify.c:524
+#: src/gaim-libnotify.c:478
 msgid "Libnotify Interface"
 msgstr "Interface com Libnotify"
 
-#: src/gaim-libnotify.c:525
+#: src/gaim-libnotify.c:479
 msgid "Displays popups via libnotify."
 msgstr "Mostra popups via libnotify."
 
-#: src/gaim-libnotify.c:526
+#: src/gaim-libnotify.c:480
 msgid ""
 "Gaim-libnotify:\n"
 "Displays popups via libnotify."
