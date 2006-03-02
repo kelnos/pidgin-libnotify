@@ -1,8 +1,8 @@
-* ellipsize summary
-* use icons again
-* use hash table again
+* ellipsize summary ?
 
 DONE:
 * ellipsize body
 * use the same handle for each buddy, to avoid IM flood
 * use buddy avatar if available, fallback to prpl icon
+* use icons again
+* use hash table again

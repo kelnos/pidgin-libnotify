@@ -1,3 +1,8 @@
+2006-03-02  Duarte Henriques <duarte.henriques@gmail.com>
+
+	* src/gaim-libnotify.c: escape messages so that it works when
+	  messages have '<' or '>' characters.
+
 2006-02-27  Duarte Henriques <duarte.henriques@gmail.com>
 
 	* src/gaim-libnotify.c: Refactor of icon code, [s|g]et_user_data

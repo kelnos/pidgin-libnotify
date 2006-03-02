@@ -217,18 +217,23 @@ closed_cb (NotifyNotification *notification)
 
 /* you must g_free the returned string */
 static gchar *
-truncate_string (const gchar *str, int num_chars)
+truncate_escape_string (const gchar *str,
+						int num_chars)
 {
-	gchar *truncated_str;
+	gchar *escaped_str;
 
 	if (strlen (str) > num_chars) {
-		gchar *str2 = g_strndup (str, num_chars-2);
+		gchar *truncated_str;
+		gchar *str2;
+		str2 = g_strndup (str, num_chars-2);
 		truncated_str = g_strdup_printf ("%s..", str2);
+		escaped_str = g_markup_escape_text (truncated_str, num_chars);
 		g_free (str2);
+		g_free (truncated_str);
 	} else {
-		truncated_str = g_strdup (str);
+		escaped_str = g_markup_escape_text (str, strlen (str));
 	}
-	return truncated_str;
+	return escaped_str;
 }
 
 static void
@@ -242,7 +247,7 @@ notify (const gchar *title,
 	gchar *tr_body;
 
 	if (body)
-		tr_body = truncate_string (body, 60);
+		tr_body = truncate_escape_string (body, 60);
 	else
 		tr_body = NULL;
 

@@ -3,7 +3,7 @@
 # gaim-encryption configure script, thanks guys ;)
 #
 
-AC_INIT([gaim-libnotify], [0.7], [nothing])
+AC_INIT([gaim-libnotify], [0.8], [nothing])
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 
@@ -66,7 +66,7 @@ AC_SUBST(CFLAGS)
 # Check for libnotify
 #
 
-PKG_CHECK_MODULES(LIBNOTIFY, libnotify >= 0.3.0)
+PKG_CHECK_MODULES(LIBNOTIFY, libnotify >= 0.3.2)
 
 AC_SUBST(LIBNOTIFY_CFLAGS)
 AC_SUBST(LIBNOTIFY_LIBS)

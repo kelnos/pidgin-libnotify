@@ -1,3 +1,9 @@
+0.8
+==
+
+* Fix bug where messages with '<' and '>' didn't appear (Duarte Henriques)
+* Add preference (on by default) to not show notifications for blocked contacts (Carl van Tonder)
+
 0.7
 ==
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gaim-libnotify\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-02-27 13:22+0000\n"
+"POT-Creation-Date: 2006-02-27 17:04+0000\n"
 "PO-Revision-Date: 2006-02-27 12:30+0000\n"
 "Last-Translator: Duarte Henriques <duarte.henriques@gmail.com>\n"
 "Language-Team: \n"
@@ -28,29 +28,29 @@ msgstr "Apenas novas conversações"
 msgid "Buddy signs on"
 msgstr "Contacto liga-se"
 
-#: src/gaim-libnotify.c:280
+#: src/gaim-libnotify.c:283
 msgid "Show"
 msgstr "Mostrar"
 
-#: src/gaim-libnotify.c:302
+#: src/gaim-libnotify.c:305
 #, c-format
 msgid "%s signed on"
 msgstr "%s ligou-se"
 
-#: src/gaim-libnotify.c:323
+#: src/gaim-libnotify.c:326
 #, c-format
 msgid "%s says:"
 msgstr "%s diz:"
 
-#: src/gaim-libnotify.c:478
+#: src/gaim-libnotify.c:481
 msgid "Libnotify Interface"
 msgstr "Interface com Libnotify"
 
-#: src/gaim-libnotify.c:479
+#: src/gaim-libnotify.c:482
 msgid "Displays popups via libnotify."
 msgstr "Mostra popups via libnotify."
 
-#: src/gaim-libnotify.c:480
+#: src/gaim-libnotify.c:483
 msgid ""
 "Gaim-libnotify:\n"
 "Displays popups via libnotify."
