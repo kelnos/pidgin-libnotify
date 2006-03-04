@@ -1,5 +1,5 @@
 # Spanish (es) translation of gaim-libnotify.
-# Copyright (C) 2005, Ezequiel Pérez <eazel7@gmail.com>
+# Copyright (C) 2005, Ezequiel PÃ©rez <eazel7@gmail.com>
 #
 # This file is distributed under the same license as gaim-libnotify.
 #

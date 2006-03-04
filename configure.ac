@@ -33,7 +33,7 @@ AH_BOTTOM([
 #
 # Setup gettext
 #
-ALL_LINGUAS="es pt"
+ALL_LINGUAS="es pt it"
 AM_GNU_GETTEXT_VERSION(0.10.40)
 AM_GNU_GETTEXT
 
