@@ -49,7 +49,7 @@ msgstr "Interfaccia libnotify"
 
 #: src/gaim-libnotify.c:482
 msgid "Displays popups via libnotify."
-msgstr "Muostra avvisi mediante libnotify."
+msgstr "Mostra avvisi mediante libnotify."
 
 #: src/gaim-libnotify.c:483
 msgid ""

@@ -1,8 +1,13 @@
+2006-02-10  Duarte Henriques <duarte.henriques@gmail.com>
+
+	* src/gaim-libnotify.c: use g_object_unref() instead of g_free()
+	  to free the pixbuf_loader, fixes crash (I hope).
+
 2006-02-10  Carl van Tonder <carlishere@hotmail.com>
 
 	* src/gaim-libnotify.c: Add preference: blocked - ignore signon
 	  and message events from blocked buddies.
-	  
+
 2006-03-02  Duarte Henriques <duarte.henriques@gmail.com>
 
 	* src/gaim-libnotify.c: escape messages so that it works when

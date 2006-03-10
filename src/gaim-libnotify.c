@@ -140,23 +140,16 @@ pixbuf_from_buddy_icon (GaimBuddyIcon *buddy_icon)
 	const char *type;
 
 	type = gaim_buddy_icon_get_type (buddy_icon);
-	/*g_print ("BUDDYICON 1\n");*/
 	data = gaim_buddy_icon_get_data (buddy_icon, &len);
-	/*g_print ("BUDDYICON 2\n");*/
 	loader = gdk_pixbuf_loader_new_with_type (type, NULL);
-	/*g_print ("BUDDYICON 3\n");*/
 	gdk_pixbuf_loader_set_size (loader, 48, 48);
-	/*g_print ("BUDDYICON 4\n");*/
 	gdk_pixbuf_loader_write (loader, data, len, NULL);
-	/*g_print ("BUDDYICON 5\n");*/
 	gdk_pixbuf_loader_close (loader, NULL);
-	/*g_print ("BUDDYICON 6\n");*/
 	icon = gdk_pixbuf_loader_get_pixbuf (loader);
-	/*g_print ("BUDDYICON 7\n");*/
-	g_object_ref (icon);
-	/*g_print ("BUDDYICON 8\n");*/
-	g_free (loader);
-	/*icon = gdk_pixbuf_new_from_data (data, cs, TRUE, 24, 96, 96, rs);*/
+	if (icon) {
+		g_object_ref (icon);
+	}
+	g_object_unref (loader);
 	return icon;
 }
 
