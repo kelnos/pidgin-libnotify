@@ -31,6 +31,7 @@
 #include "version.h"
 #include "debug.h"
 #include "util.h"
+#include "privacy.h"
 
 /* for gaim_gtk_create_prpl_icon */
 #include "gtkutils.h"
@@ -59,6 +60,11 @@ get_plugin_pref_frame (GaimPlugin *plugin)
 	ppref = gaim_plugin_pref_new_with_name_and_label (
                             "/plugins/gtk/libnotify/newconvonly",
                             _("Only new conversations"));
+	gaim_plugin_pref_frame_add (frame, ppref);
+    
+    ppref = gaim_plugin_pref_new_with_name_and_label (
+                            "/plugins/gtk/libnotify/blocked",
+                            _("Ignore events from blocked users"));
 	gaim_plugin_pref_frame_add (frame, ppref);
 
 	ppref = gaim_plugin_pref_new_with_name_and_label (
@@ -304,8 +310,14 @@ notify_buddy_signon_cb (GaimBuddy *buddy,
 	if (!gaim_prefs_get_bool ("/plugins/gtk/libnotify/signon"))
 		return;
 
+	gboolean blocked = gaim_prefs_get_bool ("/plugins/gtk/libnotify/blocked");
+
 	if (g_list_find (just_signed_on_accounts, buddy->account))
 		return;
+
+    if(!gaim_privacy_check(buddy->account, buddy->name) && blocked){
+        return;
+    }
 
 	title = g_strdup_printf (_("%s signed on"), best_name (buddy));
 
@@ -321,10 +333,15 @@ notify_msg_sent (GaimAccount *account,
 {
 	GaimBuddy *buddy;
 	gchar *title, *body, *name;
+	gboolean blocked = gaim_prefs_get_bool ("/plugins/gtk/libnotify/blocked");
 
 	buddy = gaim_find_buddy (account, sender);
 	if (!buddy)
 		return;
+    
+    if(!gaim_privacy_check(account, sender) && blocked){
+        return;
+    }
 
 	name = best_name (buddy);
 
@@ -489,6 +506,7 @@ init_plugin (GaimPlugin *plugin)
 
 	gaim_prefs_add_none ("/plugins/gtk/libnotify");
 	gaim_prefs_add_bool ("/plugins/gtk/libnotify/newmsg", TRUE);
+	gaim_prefs_add_bool ("/plugins/gtk/libnotify/blocked", TRUE);
 	gaim_prefs_add_bool ("/plugins/gtk/libnotify/newconvonly", FALSE);
 	gaim_prefs_add_bool ("/plugins/gtk/libnotify/signon", TRUE);
 }
