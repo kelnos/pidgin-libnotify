@@ -1,9 +1,15 @@
+0.9
+==
+
+* Add polish translation by Krzysztof Rosiński
+
 0.8
 ==
 
 * Fix bug where messages with '<' and '>' didn't appear (Duarte Henriques)
 * Add italian translation by Marco Cabizza
-* PENDING Add preference (on by default) to not show notifications for blocked contacts (Carl van Tonder)
+* Add preference (on by default) to not show notifications for blocked contacts (Carl van Tonder)
+* Fix crasher bug with displaying buddy icons (Duarte Henriques)
 
 0.7
 ==

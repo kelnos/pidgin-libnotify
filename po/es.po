@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gaim-libnotify\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-02-27 17:04+0000\n"
+"POT-Creation-Date: 2006-03-10 23:41+0000\n"
 "PO-Revision-Date: 2005-07-08 12:30-0300\n"
 "Last-Translator: Ezequiel Prez <eazel7@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -16,42 +16,46 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: src/gaim-libnotify.c:56
+#: src/gaim-libnotify.c:57
 msgid "New Messages"
 msgstr ""
 
-#: src/gaim-libnotify.c:61
+#: src/gaim-libnotify.c:62
 msgid "Only new conversations"
 msgstr ""
 
-#: src/gaim-libnotify.c:66
+#: src/gaim-libnotify.c:67
+msgid "Ignore events from blocked users"
+msgstr ""
+
+#: src/gaim-libnotify.c:72
 #, fuzzy
 msgid "Buddy signs on"
 msgstr "%s se ha conectado"
 
-#: src/gaim-libnotify.c:283
+#: src/gaim-libnotify.c:287
 msgid "Show"
 msgstr "Mostrar"
 
-#: src/gaim-libnotify.c:305
+#: src/gaim-libnotify.c:315
 #, c-format
 msgid "%s signed on"
 msgstr "%s se ha conectado"
 
-#: src/gaim-libnotify.c:326
+#: src/gaim-libnotify.c:341
 #, c-format
 msgid "%s says:"
 msgstr "%s dice:"
 
-#: src/gaim-libnotify.c:481
+#: src/gaim-libnotify.c:496
 msgid "Libnotify Interface"
 msgstr "Interfaz con libnotify"
 
-#: src/gaim-libnotify.c:482
+#: src/gaim-libnotify.c:497
 msgid "Displays popups via libnotify."
 msgstr "Muestra avisos mediante libnotify."
 
-#: src/gaim-libnotify.c:483
+#: src/gaim-libnotify.c:498
 msgid ""
 "Gaim-libnotify:\n"
 "Displays popups via libnotify."
