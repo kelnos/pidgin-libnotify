@@ -1,3 +1,12 @@
+2006-03-30  Duarte Henriques <duarte.henriques@gmail.com>
+
+	* src/gaim-libnotify.c: adapt to gaim-2.0.0-beta3 API.
+
+2006-02-10  Duarte Henriques <duarte.henriques@gmail.com>
+
+	* src/gaim-libnotify.c: fix bug truncating string in middle of a
+	  utf-8 character.
+
 2006-02-10  Duarte Henriques <duarte.henriques@gmail.com>
 
 	* src/gaim-libnotify.c: use g_object_unref() instead of g_free()

@@ -54,7 +54,7 @@ get_plugin_pref_frame (GaimPlugin *plugin)
 
 	ppref = gaim_plugin_pref_new_with_name_and_label (
                             "/plugins/gtk/libnotify/newmsg",
-                            _("New Messages"));
+                            _("New messages"));
 	gaim_plugin_pref_frame_add (frame, ppref);
 
 	ppref = gaim_plugin_pref_new_with_name_and_label (
@@ -133,7 +133,6 @@ static GdkPixbuf *
 pixbuf_from_buddy_icon (GaimBuddyIcon *buddy_icon)
 {
 	GdkPixbuf *icon;
-
 	const guchar *data;
 	size_t len;
 	GdkPixbufLoader *loader;
@@ -141,15 +140,20 @@ pixbuf_from_buddy_icon (GaimBuddyIcon *buddy_icon)
 
 	type = gaim_buddy_icon_get_type (buddy_icon);
 	data = gaim_buddy_icon_get_data (buddy_icon, &len);
+
 	loader = gdk_pixbuf_loader_new_with_type (type, NULL);
 	gdk_pixbuf_loader_set_size (loader, 48, 48);
 	gdk_pixbuf_loader_write (loader, data, len, NULL);
 	gdk_pixbuf_loader_close (loader, NULL);
+
 	icon = gdk_pixbuf_loader_get_pixbuf (loader);
+
 	if (icon) {
 		g_object_ref (icon);
 	}
+
 	g_object_unref (loader);
+
 	return icon;
 }
 
@@ -159,7 +163,6 @@ action_cb (NotifyNotification *notification,
 {
 	GaimBuddy *buddy = NULL;
 	GaimConversation *conv = NULL;
-	/*GaimConvWindow *win = NULL;*/
 
 	gaim_debug_info (PLUGIN_ID, "action_cb(), "
 					"notification: 0x%x, action: '%s'", notification, action);
@@ -178,22 +181,7 @@ action_cb (NotifyNotification *notification,
 									  buddy->account,
 									  buddy->name);
 	}
-	/* not working now, this doesn't raise the window */
 	conv->ui_ops->present (conv);
-#if 0
-	win = gaim_conversation_get_window (conv);
-
-	if (win) {
-		gaim_conv_window_raise (win);
-		gaim_conv_window_switch_conversation (win, gaim_conversation_get_index(conv));
-
-		if (GAIM_IS_GTK_WINDOW (win))
-			gtk_window_present (GTK_WINDOW (GAIM_GTK_WINDOW (win)->window));
-	} else {
-		gaim_debug_warning (PLUGIN_ID, "No window found for conversation!");
-		return;
-	}
-#endif
 
 	notify_notification_close (notification, NULL);
 }
@@ -214,19 +202,24 @@ closed_cb (NotifyNotification *notification)
 	return FALSE;
 }
 
-/* you must g_free the returned string */
+/* you must g_free the returned string
+ * num_chars is utf-8 characters */
 static gchar *
 truncate_escape_string (const gchar *str,
 						int num_chars)
 {
 	gchar *escaped_str;
 
-	if (strlen (str) > num_chars) {
+	if (g_utf8_strlen (str, num_chars*2+1) > num_chars) {
 		gchar *truncated_str;
 		gchar *str2;
-		str2 = g_strndup (str, num_chars-2);
+
+		/* allocate number of bytes and not number of utf-8 chars */
+		str2 = g_malloc ((num_chars-1) * 2 * sizeof(gchar));
+
+		g_utf8_strncpy (str2, str, num_chars-2);
 		truncated_str = g_strdup_printf ("%s..", str2);
-		escaped_str = g_markup_escape_text (truncated_str, num_chars);
+		escaped_str = g_markup_escape_text (truncated_str, strlen (truncated_str));
 		g_free (str2);
 		g_free (truncated_str);
 	} else {
@@ -250,30 +243,38 @@ notify (const gchar *title,
 	else
 		tr_body = NULL;
 
-	gaim_debug_info (PLUGIN_ID, "notify(), "
-					 "title: '%s', body: '%s', buddy: '%s'\n",
-					 title, tr_body, best_name (buddy));
-
 	notification = g_hash_table_lookup (buddy_hash, buddy);
 
 	if (notification != NULL) {
 		notify_notification_update (notification, title, tr_body, NULL);
+		gaim_debug_info (PLUGIN_ID, "notify(), update: "
+						 "title: '%s', body: '%s', buddy: '%s'\n",
+						 title, tr_body, best_name (buddy));
+
 		g_free (tr_body);
 		return;
 	}
 	notification = notify_notification_new (title, tr_body, NULL, NULL);
+	gaim_debug_info (PLUGIN_ID, "notify(), new: "
+					 "title: '%s', body: '%s', buddy: '%s'\n",
+					 title, tr_body, best_name (buddy));
+
 	g_free (tr_body);
 
 	buddy_icon = gaim_buddy_get_icon (buddy);
 	if (buddy_icon) {
 		icon = pixbuf_from_buddy_icon (buddy_icon);
+		gaim_debug_info (PLUGIN_ID, "notify(), has a buddy icon.\n");
 	} else {
-		icon = gaim_gtk_create_prpl_icon (buddy->account);
+		icon = gaim_gtk_create_prpl_icon (buddy->account, 1);
+		gaim_debug_info (PLUGIN_ID, "notify(), has a prpl icon.\n");
 	}
 
 	if (icon) {
 		notify_notification_set_icon_from_pixbuf (notification, icon);
 		g_object_unref (icon);
+	} else {
+		gaim_debug_warning (PLUGIN_ID, "notify(), couldn't find any icon!\n");
 	}
 
 	g_hash_table_insert (buddy_hash, buddy, notification);
@@ -362,8 +363,11 @@ notify_new_message_cb (GaimAccount *account,
 
 	conv = gaim_find_conversation_with_account (GAIM_CONV_TYPE_IM, sender, account);
 
+#define DEBUG /* TODO: remove me! */
+#ifndef DEBUG /* in debug mode, always show notifications */
 	if (conv && gaim_conversation_has_focus (conv))
 		return;
+#endif
 
 	newconvonly = gaim_prefs_get_bool ("/plugins/gtk/libnotify/newconvonly");
 
@@ -445,7 +449,7 @@ plugin_unload (GaimPlugin *plugin)
 							GAIM_CALLBACK(notify_chat_nick));
 
 	gaim_signal_disconnect (conn_handle, "signed-on", plugin,
-						GAIM_CALLBACK(event_connection_throttle));
+							GAIM_CALLBACK(event_connection_throttle));
 
 	g_hash_table_destroy (buddy_hash);
 
@@ -493,7 +497,7 @@ init_plugin (GaimPlugin *plugin)
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	bind_textdomain_codeset (PACKAGE, "UTF-8");
 
-	info.name = _("Libnotify Interface");
+	info.name = _("Libnotify Popups");
 	info.summary = _("Displays popups via libnotify.");
 	info.description = _("Gaim-libnotify:\nDisplays popups via libnotify.");
 

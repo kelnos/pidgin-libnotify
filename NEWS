@@ -2,6 +2,10 @@
 ==
 
 * Add polish translation by Krzysztof Rosiński
+* Adapt to gaim-2.0.0beta3 API
+* Fix crasher bug caused by blindly splitting utf-8 strings
+* There's a problem with icons on libnotify and dbus 0.61, please use dbus 0.60
+* The white background of the clock over the yellow background is a problem that lies with notification-daemon on ubuntu
 
 0.8
 ==
