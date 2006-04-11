@@ -61,8 +61,8 @@ get_plugin_pref_frame (GaimPlugin *plugin)
                             "/plugins/gtk/libnotify/newconvonly",
                             _("Only new conversations"));
 	gaim_plugin_pref_frame_add (frame, ppref);
-    
-    ppref = gaim_plugin_pref_new_with_name_and_label (
+
+	ppref = gaim_plugin_pref_new_with_name_and_label (
                             "/plugins/gtk/libnotify/blocked",
                             _("Ignore events from blocked users"));
 	gaim_plugin_pref_frame_add (frame, ppref);
@@ -136,12 +136,10 @@ pixbuf_from_buddy_icon (GaimBuddyIcon *buddy_icon)
 	const guchar *data;
 	size_t len;
 	GdkPixbufLoader *loader;
-	const char *type;
 
-	type = gaim_buddy_icon_get_type (buddy_icon);
 	data = gaim_buddy_icon_get_data (buddy_icon, &len);
 
-	loader = gdk_pixbuf_loader_new_with_type (type, NULL);
+	loader = gdk_pixbuf_loader_new ();
 	gdk_pixbuf_loader_set_size (loader, 48, 48);
 	gdk_pixbuf_loader_write (loader, data, len, NULL);
 	gdk_pixbuf_loader_close (loader, NULL);
@@ -363,7 +361,6 @@ notify_new_message_cb (GaimAccount *account,
 
 	conv = gaim_find_conversation_with_account (GAIM_CONV_TYPE_IM, sender, account);
 
-#define DEBUG /* TODO: remove me! */
 #ifndef DEBUG /* in debug mode, always show notifications */
 	if (conv && gaim_conversation_has_focus (conv))
 		return;

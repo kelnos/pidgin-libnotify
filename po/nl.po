@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gaim-libnotify\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-03-13 18:09+0100\n"
+"POT-Creation-Date: 2006-03-31 15:32+0100\n"
 "PO-Revision-Date: 2005-07-08 12:30-0300\n"
 "Last-Translator: Raymond Jelierse <eagletitan@users.sourceforge.net>\n"
 "Language-Team: \n"
@@ -17,7 +17,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: src/gaim-libnotify.c:57
-msgid "New Messages"
+#, fuzzy
+msgid "New messages"
 msgstr "Nieuwe berichten"
 
 #: src/gaim-libnotify.c:62
@@ -32,32 +33,35 @@ msgstr "Negeer gebeurtenissen van geblokkeerde gebruikers"
 msgid "Buddy signs on"
 msgstr "Contactpersoon heeft zich aangemeld"
 
-#: src/gaim-libnotify.c:287
+#: src/gaim-libnotify.c:288
 msgid "Show"
 msgstr "Toon"
 
-#: src/gaim-libnotify.c:315
+#: src/gaim-libnotify.c:316
 #, c-format
 msgid "%s signed on"
 msgstr "%s heeft zich aangemeld"
 
-#: src/gaim-libnotify.c:341
+#: src/gaim-libnotify.c:342
 #, c-format
 msgid "%s says:"
 msgstr "%s zegt:"
 
-#: src/gaim-libnotify.c:496
-msgid "Libnotify Interface"
-msgstr "Libnotify Interface"
+#: src/gaim-libnotify.c:500
+msgid "Libnotify Popups"
+msgstr ""
 
-#: src/gaim-libnotify.c:497
+#: src/gaim-libnotify.c:501
 msgid "Displays popups via libnotify."
 msgstr "Toons popups via libnotify."
 
-#: src/gaim-libnotify.c:498
+#: src/gaim-libnotify.c:502
 msgid ""
 "Gaim-libnotify:\n"
 "Displays popups via libnotify."
 msgstr ""
 "Gaim-libnotify:\n"
 "Toont popups via libnotify."
+
+#~ msgid "Libnotify Interface"
+#~ msgstr "Libnotify Interface"

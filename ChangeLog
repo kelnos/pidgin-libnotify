@@ -1,3 +1,8 @@
+2006-04-11  Steve Frécinaux <steve@istique.net>
+
+	* src/gaim-libnotify.c: Let the GtkPixbufLoader detect the image
+	  type by itself (fixes crash).
+
 2006-03-30  Duarte Henriques <duarte.henriques@gmail.com>
 
 	* src/gaim-libnotify.c: adapt to gaim-2.0.0-beta3 API.
