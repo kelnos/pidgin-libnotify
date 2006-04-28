@@ -1,3 +1,8 @@
+2006-04-28  Duarte Henriques <duarte.henriques@gmail.com>
+
+	* src/gaim-libnotify.c: workaround for libnotify API strangeness:
+	  we have to call notification_show() after an update.
+
 2006-04-11  Steve Frécinaux <steve@istique.net>
 
 	* src/gaim-libnotify.c: Let the GtkPixbufLoader detect the image

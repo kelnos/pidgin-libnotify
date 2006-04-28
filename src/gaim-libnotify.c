@@ -245,6 +245,9 @@ notify (const gchar *title,
 
 	if (notification != NULL) {
 		notify_notification_update (notification, title, tr_body, NULL);
+		/* this shouldn't be necessary, file a bug */
+		notify_notification_show (notification, NULL);
+
 		gaim_debug_info (PLUGIN_ID, "notify(), update: "
 						 "title: '%s', body: '%s', buddy: '%s'\n",
 						 title, tr_body, best_name (buddy));

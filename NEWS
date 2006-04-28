@@ -2,6 +2,7 @@
 ==
 
 * Fix crasher with some icons (Steve Frécinaux)
+* Workaround/bug fix: messages weren't updated (Duarte Henriques)
 
 0.9
 ==
