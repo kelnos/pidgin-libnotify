@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gaim-libnotify\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-03-31 15:32+0100\n"
+"POT-Creation-Date: 2006-04-30 23:38+0100\n"
 "PO-Revision-Date: 2005-07-08 12:30-0300\n"
 "Last-Translator: Marco Cabizza <marco87@gmail.com>\n"
 "Language-Team: \n"
@@ -34,16 +34,16 @@ msgstr ""
 msgid "Buddy signs on"
 msgstr "%s entra"
 
-#: src/gaim-libnotify.c:288
+#: src/gaim-libnotify.c:289
 msgid "Show"
 msgstr "Mostra"
 
-#: src/gaim-libnotify.c:316
+#: src/gaim-libnotify.c:317
 #, c-format
 msgid "%s signed on"
 msgstr "%s è entrato"
 
-#: src/gaim-libnotify.c:342
+#: src/gaim-libnotify.c:343
 #, c-format
 msgid "%s says:"
 msgstr "%s dice:"

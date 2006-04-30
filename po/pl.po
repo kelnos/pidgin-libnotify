@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gaim-libnotify\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-03-31 15:32+0100\n"
+"POT-Creation-Date: 2006-04-30 23:38+0100\n"
 "PO-Revision-Date: 2006-03-13 19:39+ZONE\n"
 "Last-Translator: Krzysztof Rosiński <kr@post.pl>\n"
 "Language-Team: Polish <kr@post.pl>\n"
@@ -34,16 +34,16 @@ msgstr "Ignoruj zdarzenia od zablokowanych osób"
 msgid "Buddy signs on"
 msgstr "Znajomy zalogował się"
 
-#: src/gaim-libnotify.c:288
+#: src/gaim-libnotify.c:289
 msgid "Show"
 msgstr "Pokaż"
 
-#: src/gaim-libnotify.c:316
+#: src/gaim-libnotify.c:317
 #, c-format
 msgid "%s signed on"
 msgstr "%s zalogował się"
 
-#: src/gaim-libnotify.c:342
+#: src/gaim-libnotify.c:343
 #, c-format
 msgid "%s says:"
 msgstr "%s powiedział:"
