@@ -1,0 +1,67 @@
+# French (fr) translation of gaim-libnotify.
+# Copyright (C) 2005, Ersplus <ersplus@free.fr>
+#
+# This file is distributed under the same license as gaim-libnotify.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gaim-libnotify\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2006-04-30 23:38+0100\n"
+"PO-Revision-Date: 2006-05-03 15:35+0100\n"
+"Last-Translator: Ersplus <ersplus@free.fr>\n"
+"Language-Team: French <ef@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: src/gaim-libnotify.c:57
+msgid "New messages"
+msgstr "Nouveau message"
+
+#: src/gaim-libnotify.c:62
+msgid "Only new conversations"
+msgstr "Seulement les nouvelles conversations"
+
+#: src/gaim-libnotify.c:67
+msgid "Ignore events from blocked users"
+msgstr "Ignorer les evenements des utilsateurs bloqués"
+
+#: src/gaim-libnotify.c:72
+msgid "Buddy signs on"
+msgstr "L'utilisateur se connecte"
+
+#: src/gaim-libnotify.c:289
+msgid "Show"
+msgstr "Montrer"
+
+#: src/gaim-libnotify.c:317
+#, c-format
+msgid "%s signed on"
+msgstr "%s s'est connecté"
+
+#: src/gaim-libnotify.c:343
+#, c-format
+msgid "%s says:"
+msgstr "%s dit :"
+
+#: src/gaim-libnotify.c:500
+msgid "Libnotify Popups"
+msgstr "Popups Libnotify"
+
+#: src/gaim-libnotify.c:501
+msgid "Displays popups via libnotify."
+msgstr "Affiche des popups via libnotify."
+
+#: src/gaim-libnotify.c:502
+msgid ""
+"Gaim-libnotify:\n"
+"Displays popups via libnotify."
+msgstr ""
+"Gaim-libnotify:\n"
+"Affiche des messages via libnotify."
+
+#~ msgid "Libnotify Interface"
+#~ msgstr "Interfaz con libnotify"
+
