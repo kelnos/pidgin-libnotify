@@ -1,9 +1,9 @@
-* fix bug in libnotify: Update existing notification doesn't work
 * file bug in libnotify: icons on libnotify and dbus 0.61 don't work
 * file bug in libnotify/ubuntu: white background of the clock over the yellow background
 * ellipsize summary ?
 
 DONE:
+* fix bug in libnotify: Update existing notification doesn't work (was not a bug in libnotify, simply an API strangeness)
 * ellipsize body
 * use the same handle for each buddy, to avoid IM flood
 * use buddy avatar if available, fallback to prpl icon
