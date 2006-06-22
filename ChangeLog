@@ -1,5 +1,11 @@
 2006-04-28  Duarte Henriques <duarte.henriques@gmail.com>
 
+	* src/gaim-libnotify.c: fix bug #1492483, Empty string on weird
+	characters by escaping and (as a bonus) truncating the name on
+	the title.
+
+2006-04-28  Duarte Henriques <duarte.henriques@gmail.com>
+
 	* src/gaim-libnotify.c: workaround for libnotify API strangeness:
 	  we have to call notification_show() after an update.
 

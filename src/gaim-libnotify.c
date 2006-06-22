@@ -17,6 +17,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
+#define DEBUG
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -223,6 +225,7 @@ truncate_escape_string (const gchar *str,
 	} else {
 		escaped_str = g_markup_escape_text (str, strlen (str));
 	}
+
 	return escaped_str;
 }
 
@@ -298,7 +301,7 @@ static void
 notify_buddy_signon_cb (GaimBuddy *buddy,
 						gpointer data)
 {
-	gchar *title;
+	gchar *tr_name, *title;
 
 	g_return_if_fail (buddy);
 
@@ -310,14 +313,16 @@ notify_buddy_signon_cb (GaimBuddy *buddy,
 	if (g_list_find (just_signed_on_accounts, buddy->account))
 		return;
 
-    if(!gaim_privacy_check(buddy->account, buddy->name) && blocked){
-        return;
-    }
+	if (!gaim_privacy_check (buddy->account, buddy->name) && blocked)
+		return;
 
-	title = g_strdup_printf (_("%s signed on"), best_name (buddy));
+	tr_name = truncate_escape_string (best_name (buddy), 25);
+
+	title = g_strdup_printf (_("%s signed on"), tr_name);
 
 	notify (title, NULL, buddy);
 
+	g_free (tr_name);
 	g_free (title);
 }
 
@@ -327,24 +332,24 @@ notify_msg_sent (GaimAccount *account,
 				 const gchar *message)
 {
 	GaimBuddy *buddy;
-	gchar *title, *body, *name;
+	gchar *title, *body, *tr_name;
 	gboolean blocked = gaim_prefs_get_bool ("/plugins/gtk/libnotify/blocked");
 
 	buddy = gaim_find_buddy (account, sender);
 	if (!buddy)
 		return;
-    
-    if(!gaim_privacy_check(account, sender) && blocked){
-        return;
-    }
 
-	name = best_name (buddy);
+	if (!gaim_privacy_check(account, sender) && blocked)
+		return;
 
-	title = g_strdup_printf (_("%s says:"), name);
+	tr_name = truncate_escape_string (best_name (buddy), 25);
+
+	title = g_strdup_printf (_("%s says:"), tr_name);
 	body = gaim_markup_strip_html (message);
 
 	notify (title, body, buddy);
 
+	g_free (tr_name);
 	g_free (title);
 	g_free (body);
 }
