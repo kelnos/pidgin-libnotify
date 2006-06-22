@@ -74,6 +74,11 @@ get_plugin_pref_frame (GaimPlugin *plugin)
                             _("Buddy signs on"));
 	gaim_plugin_pref_frame_add (frame, ppref);
 
+	ppref = gaim_plugin_pref_new_with_name_and_label (
+                            "/plugins/gtk/libnotify/signoff",
+                            _("Buddy signs off"));
+	gaim_plugin_pref_frame_add (frame, ppref);
+
 	return frame;
 }
 
@@ -302,17 +307,17 @@ notify_buddy_signon_cb (GaimBuddy *buddy,
 						gpointer data)
 {
 	gchar *tr_name, *title;
+	gboolean blocked;
 
 	g_return_if_fail (buddy);
 
 	if (!gaim_prefs_get_bool ("/plugins/gtk/libnotify/signon"))
 		return;
 
-	gboolean blocked = gaim_prefs_get_bool ("/plugins/gtk/libnotify/blocked");
-
 	if (g_list_find (just_signed_on_accounts, buddy->account))
 		return;
 
+	blocked = gaim_prefs_get_bool ("/plugins/gtk/libnotify/blocked");
 	if (!gaim_privacy_check (buddy->account, buddy->name) && blocked)
 		return;
 
@@ -327,18 +332,48 @@ notify_buddy_signon_cb (GaimBuddy *buddy,
 }
 
 static void
+notify_buddy_signoff_cb (GaimBuddy *buddy,
+						 gpointer data)
+{
+	gchar *tr_name, *title;
+	gboolean blocked;
+
+	g_return_if_fail (buddy);
+
+	if (!gaim_prefs_get_bool ("/plugins/gtk/libnotify/signoff"))
+		return;
+
+	if (g_list_find (just_signed_on_accounts, buddy->account))
+		return;
+
+	blocked = gaim_prefs_get_bool ("/plugins/gtk/libnotify/blocked");
+	if (!gaim_privacy_check (buddy->account, buddy->name) && blocked)
+		return;
+
+	tr_name = truncate_escape_string (best_name (buddy), 25);
+
+	title = g_strdup_printf (_("%s signed off"), tr_name);
+
+	notify (title, NULL, buddy);
+
+	g_free (tr_name);
+	g_free (title);
+}
+
+static void
 notify_msg_sent (GaimAccount *account,
 				 const gchar *sender,
 				 const gchar *message)
 {
 	GaimBuddy *buddy;
 	gchar *title, *body, *tr_name;
-	gboolean blocked = gaim_prefs_get_bool ("/plugins/gtk/libnotify/blocked");
+	gboolean blocked;
 
 	buddy = gaim_find_buddy (account, sender);
 	if (!buddy)
 		return;
 
+	blocked = gaim_prefs_get_bool ("/plugins/gtk/libnotify/blocked");
 	if (!gaim_privacy_check(account, sender) && blocked)
 		return;
 
@@ -421,7 +456,10 @@ plugin_load (GaimPlugin *plugin)
 
 	gaim_signal_connect (blist_handle, "buddy-signed-on", plugin,
 						GAIM_CALLBACK(notify_buddy_signon_cb), NULL);
-	
+
+	gaim_signal_connect (blist_handle, "buddy-signed-off", plugin,
+						GAIM_CALLBACK(notify_buddy_signoff_cb), NULL);
+
 	gaim_signal_connect (conv_handle, "received-im-msg", plugin,
 						GAIM_CALLBACK(notify_new_message_cb), NULL);
 
@@ -446,6 +484,9 @@ plugin_unload (GaimPlugin *plugin)
 
 	gaim_signal_disconnect (blist_handle, "buddy-signed-on", plugin,
 							GAIM_CALLBACK(notify_buddy_signon_cb));
+
+	gaim_signal_disconnect (blist_handle, "buddy-signed-off", plugin,
+							GAIM_CALLBACK(notify_buddy_signoff_cb));
 
 	gaim_signal_disconnect (conv_handle, "received-im-msg", plugin,
 							GAIM_CALLBACK(notify_new_message_cb));
@@ -511,6 +552,7 @@ init_plugin (GaimPlugin *plugin)
 	gaim_prefs_add_bool ("/plugins/gtk/libnotify/blocked", TRUE);
 	gaim_prefs_add_bool ("/plugins/gtk/libnotify/newconvonly", FALSE);
 	gaim_prefs_add_bool ("/plugins/gtk/libnotify/signon", TRUE);
+	gaim_prefs_add_bool ("/plugins/gtk/libnotify/signoff", FALSE);
 }
 
 GAIM_INIT_PLUGIN(notify, init_plugin, info)

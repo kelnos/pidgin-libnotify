@@ -1,4 +1,9 @@
-2006-04-28  Duarte Henriques <duarte.henriques@gmail.com>
+2006-06-22  Duarte Henriques <duarte.henriques@gmail.com>
+
+	* src/gaim-libnotify.c: fix bug #1491160, Notification When Buddy
+	Logs Out, with an option disabled by default.
+
+2006-06-22  Duarte Henriques <duarte.henriques@gmail.com>
 
 	* src/gaim-libnotify.c: fix bug #1492483, Empty string on weird
 	characters by escaping and (as a bonus) truncating the name on
