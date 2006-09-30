@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gaim-libnotify\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-06-22 12:36+0100\n"
+"POT-Creation-Date: 2006-06-22 13:53+0100\n"
 "PO-Revision-Date: 2006-03-13 19:39+ZONE\n"
 "Last-Translator: Krzysztof Rosiński <kr@post.pl>\n"
 "Language-Team: Polish <kr@post.pl>\n"
@@ -34,29 +34,39 @@ msgstr "Ignoruj zdarzenia od zablokowanych osób"
 msgid "Buddy signs on"
 msgstr "Znajomy zalogował się"
 
-#: src/gaim-libnotify.c:289
+#: src/gaim-libnotify.c:77
+#, fuzzy
+msgid "Buddy signs off"
+msgstr "Znajomy zalogował się"
+
+#: src/gaim-libnotify.c:295
 msgid "Show"
 msgstr "Pokaż"
 
-#: src/gaim-libnotify.c:317
+#: src/gaim-libnotify.c:324
 #, c-format
 msgid "%s signed on"
 msgstr "%s zalogował się"
 
-#: src/gaim-libnotify.c:343
+#: src/gaim-libnotify.c:353
+#, fuzzy, c-format
+msgid "%s signed off"
+msgstr "%s zalogował się"
+
+#: src/gaim-libnotify.c:380
 #, c-format
 msgid "%s says:"
 msgstr "%s powiedział:"
 
-#: src/gaim-libnotify.c:500
+#: src/gaim-libnotify.c:544
 msgid "Libnotify Popups"
 msgstr ""
 
-#: src/gaim-libnotify.c:501
+#: src/gaim-libnotify.c:545
 msgid "Displays popups via libnotify."
 msgstr "Wyświetla powiadomienia przy użyciu biblioteki libnotify"
 
-#: src/gaim-libnotify.c:502
+#: src/gaim-libnotify.c:546
 msgid ""
 "Gaim-libnotify:\n"
 "Displays popups via libnotify."

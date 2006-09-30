@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gaim-libnotify\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-06-22 12:36+0100\n"
+"POT-Creation-Date: 2006-06-22 13:53+0100\n"
 "PO-Revision-Date: 2006-06-21 19:06-0300\n"
 "Last-Translator: Everson -NoBIOS- Santos Araujo <everson@por.com.br>\n"
 "Language-Team: Portuguese/Brazil <gnome-l10n-br@listas.cipsga.org.br>\n"
@@ -32,29 +32,38 @@ msgstr "Ignorar eventos de usuários bloqueados"
 msgid "Buddy signs on"
 msgstr "Amigo conecta"
 
-#: src/gaim-libnotify.c:289
+#: src/gaim-libnotify.c:77
+msgid "Buddy signs off"
+msgstr "Amigo desconecta"
+
+#: src/gaim-libnotify.c:295
 msgid "Show"
 msgstr "Mostrar"
 
-#: src/gaim-libnotify.c:317
+#: src/gaim-libnotify.c:324
 #, c-format
 msgid "%s signed on"
 msgstr "%s conectou"
 
-#: src/gaim-libnotify.c:343
+#: src/gaim-libnotify.c:353
+#, c-format
+msgid "%s signed off"
+msgstr "%s desconectou"
+
+#: src/gaim-libnotify.c:380
 #, c-format
 msgid "%s says:"
 msgstr "%s diz:"
 
-#: src/gaim-libnotify.c:500
+#: src/gaim-libnotify.c:544
 msgid "Libnotify Popups"
 msgstr "Popups Libnotify"
 
-#: src/gaim-libnotify.c:501
+#: src/gaim-libnotify.c:545
 msgid "Displays popups via libnotify."
 msgstr "Mostra popups via libnotify."
 
-#: src/gaim-libnotify.c:502
+#: src/gaim-libnotify.c:546
 msgid ""
 "Gaim-libnotify:\n"
 "Displays popups via libnotify."

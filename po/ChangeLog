@@ -1,4 +1,11 @@
-2005-05-03  Duarte Henriques <duarte.henriques@gmail.com>
+2005-06-22  Duarte Henriques <duarte.henriques@gmail.com>
+
+	* po/pt_BR.po:
+	Update brazilian portuguese translation
+	* po/pt.po:
+	Update portuguese translation
+
+2005-06-22  Duarte Henriques <duarte.henriques@gmail.com>
 
 	* po/pt_BR.po:
 	Add brazilian portuguese translation (Everson Araujo)

@@ -17,8 +17,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#define DEBUG
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -29,14 +27,16 @@
 #define GAIM_PLUGINS
 #endif
 
-#include "gaim.h"
-#include "version.h"
-#include "debug.h"
-#include "util.h"
-#include "privacy.h"
+#include <gaim.h>
+#include <version.h>
+#include <debug.h>
+#include <util.h>
+#include <privacy.h>
 
+#if 0 /* TODO: resolve include */
 /* for gaim_gtk_create_prpl_icon */
 #include "gtkutils.h"
+#endif
 
 #include <libnotify/notify.h>
 
@@ -275,8 +275,12 @@ notify (const gchar *title,
 		icon = pixbuf_from_buddy_icon (buddy_icon);
 		gaim_debug_info (PLUGIN_ID, "notify(), has a buddy icon.\n");
 	} else {
+#if 0 /* TODO: resolve include header and uncomment */
 		icon = gaim_gtk_create_prpl_icon (buddy->account, 1);
 		gaim_debug_info (PLUGIN_ID, "notify(), has a prpl icon.\n");
+#else
+		icon = NULL;
+#endif
 	}
 
 	if (icon) {
@@ -405,16 +409,20 @@ notify_new_message_cb (GaimAccount *account,
 	conv = gaim_find_conversation_with_account (GAIM_CONV_TYPE_IM, sender, account);
 
 #ifndef DEBUG /* in debug mode, always show notifications */
-	if (conv && gaim_conversation_has_focus (conv))
+	if (conv && gaim_conversation_has_focus (conv)) {
+		gaim_debug_info (PLUGIN_ID, "Conversation has focus 0x%x\n", conv);
 		return;
+	}
 #endif
 
 	newconvonly = gaim_prefs_get_bool ("/plugins/gtk/libnotify/newconvonly");
 
+#if 0 /* TODO: Use gtk_imhtml_get_markup instead? */
 	if (newconvonly && gaim_conversation_get_send_history (conv)) {
 		gaim_debug_info (PLUGIN_ID, "Conversation is not new 0x%x\n", conv);
 		return;
 	}
+#endif
 
 	notify_msg_sent (account, sender, message);
 }

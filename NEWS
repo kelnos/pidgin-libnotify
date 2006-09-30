@@ -1,7 +1,10 @@
 0.11
 ==
 
-* Add french Translation by Ersplus
+* Add french translation by Ersplus
+* Add brazilian portuguese translation by Everson Araujo
+* Add option to show notification when a buddy logs out
+* Fix bug where buddy names with xml characters were not shown
 
 0.10
 ==

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gaim-libnotify\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-06-22 12:36+0100\n"
+"POT-Creation-Date: 2006-06-22 13:53+0100\n"
 "PO-Revision-Date: 2005-07-08 12:30-0300\n"
 "Last-Translator: Marco Cabizza <marco87@gmail.com>\n"
 "Language-Team: \n"
@@ -34,29 +34,39 @@ msgstr ""
 msgid "Buddy signs on"
 msgstr "%s entra"
 
-#: src/gaim-libnotify.c:289
+#: src/gaim-libnotify.c:77
+#, fuzzy
+msgid "Buddy signs off"
+msgstr "%s entra"
+
+#: src/gaim-libnotify.c:295
 msgid "Show"
 msgstr "Mostra"
 
-#: src/gaim-libnotify.c:317
+#: src/gaim-libnotify.c:324
 #, c-format
 msgid "%s signed on"
 msgstr "%s è entrato"
 
-#: src/gaim-libnotify.c:343
+#: src/gaim-libnotify.c:353
+#, fuzzy, c-format
+msgid "%s signed off"
+msgstr "%s è entrato"
+
+#: src/gaim-libnotify.c:380
 #, c-format
 msgid "%s says:"
 msgstr "%s dice:"
 
-#: src/gaim-libnotify.c:500
+#: src/gaim-libnotify.c:544
 msgid "Libnotify Popups"
 msgstr ""
 
-#: src/gaim-libnotify.c:501
+#: src/gaim-libnotify.c:545
 msgid "Displays popups via libnotify."
 msgstr "Mostra avvisi mediante libnotify."
 
-#: src/gaim-libnotify.c:502
+#: src/gaim-libnotify.c:546
 msgid ""
 "Gaim-libnotify:\n"
 "Displays popups via libnotify."

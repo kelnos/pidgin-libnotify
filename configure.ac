@@ -129,6 +129,7 @@ echo Configuration complete
 echo;
 echo Debugging enabled..............: $enable_debug
 echo Deprecated API enabled.........: $enable_deprecated
+#echo Gaim API.......................: $GAIM_CFLAGS
 echo;
 echo Type make to compile
 echo Thank you for using gaim-libnotify
