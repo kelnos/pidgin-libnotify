@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gaim-libnotify\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-06-22 13:53+0100\n"
+"POT-Creation-Date: 2006-10-22 14:01+0000\n"
 "PO-Revision-Date: 2006-05-03 15:35+0100\n"
 "Last-Translator: Ersplus <ersplus@free.fr>\n"
 "Language-Team: French <ef@li.org>\n"
@@ -56,15 +56,15 @@ msgstr "%s s'est connecté"
 msgid "%s says:"
 msgstr "%s dit :"
 
-#: src/gaim-libnotify.c:544
+#: src/gaim-libnotify.c:543
 msgid "Libnotify Popups"
 msgstr "Popups Libnotify"
 
-#: src/gaim-libnotify.c:545
+#: src/gaim-libnotify.c:544
 msgid "Displays popups via libnotify."
 msgstr "Affiche des popups via libnotify."
 
-#: src/gaim-libnotify.c:546
+#: src/gaim-libnotify.c:545
 msgid ""
 "Gaim-libnotify:\n"
 "Displays popups via libnotify."

@@ -33,10 +33,8 @@
 #include <util.h>
 #include <privacy.h>
 
-#if 0 /* TODO: resolve include */
 /* for gaim_gtk_create_prpl_icon */
-#include "gtkutils.h"
-#endif
+#include <gaim/gtkutils.h>
 
 #include <libnotify/notify.h>
 
@@ -275,12 +273,8 @@ notify (const gchar *title,
 		icon = pixbuf_from_buddy_icon (buddy_icon);
 		gaim_debug_info (PLUGIN_ID, "notify(), has a buddy icon.\n");
 	} else {
-#if 0 /* TODO: resolve include header and uncomment */
 		icon = gaim_gtk_create_prpl_icon (buddy->account, 1);
 		gaim_debug_info (PLUGIN_ID, "notify(), has a prpl icon.\n");
-#else
-		icon = NULL;
-#endif
 	}
 
 	if (icon) {
@@ -401,7 +395,6 @@ notify_new_message_cb (GaimAccount *account,
 					   gpointer data)
 {
 	GaimConversation *conv;
-	gboolean newconvonly;
 
 	if (!gaim_prefs_get_bool ("/plugins/gtk/libnotify/newmsg"))
 		return;
@@ -415,14 +408,10 @@ notify_new_message_cb (GaimAccount *account,
 	}
 #endif
 
-	newconvonly = gaim_prefs_get_bool ("/plugins/gtk/libnotify/newconvonly");
-
-#if 0 /* TODO: Use gtk_imhtml_get_markup instead? */
-	if (newconvonly && gaim_conversation_get_send_history (conv)) {
+	if (conv && gaim_prefs_get_bool ("/plugins/gtk/libnotify/newconvonly")) {
 		gaim_debug_info (PLUGIN_ID, "Conversation is not new 0x%x\n", conv);
 		return;
 	}
-#endif
 
 	notify_msg_sent (account, sender, message);
 }

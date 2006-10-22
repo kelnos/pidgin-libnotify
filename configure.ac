@@ -3,7 +3,7 @@
 # gaim-encryption configure script, thanks guys ;)
 #
 
-AC_INIT([gaim-libnotify], [0.11], [nothing])
+AC_INIT([gaim-libnotify], [0.12], [nothing])
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 
