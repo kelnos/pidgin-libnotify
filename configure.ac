@@ -3,7 +3,7 @@
 # gaim-encryption configure script, thanks guys ;)
 #
 
-AC_INIT([gaim-libnotify], [0.12], [nothing])
+AC_INIT([gaim-libnotify], [0.13], [nothing])
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 
@@ -33,9 +33,11 @@ AH_BOTTOM([
 #
 # Setup gettext
 #
+AC_PROG_INTLTOOL
+GETTEXT_PACKAGE=gaim-libnotify
+AC_SUBST(GETTEXT_PACKAGE)
 ALL_LINGUAS="es fr it nl pl pt pt_BR"
-AM_GNU_GETTEXT_VERSION(0.10.40)
-AM_GNU_GETTEXT
+AM_GLIB_GNU_GETTEXT
 
 #
 # Look for the C compiler

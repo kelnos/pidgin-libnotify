@@ -1,7 +1,12 @@
+2006-11-17  Duarte Henriques <duarte.henriques@gmail.com>
+
+	* src/gaim-libnotify.c: fix i18n framework and include
+	headers. Patch by Eduardo Pérez.
+
 2006-10-22  Duarte Henriques <duarte.henriques@gmail.com>
 
-	* src/gaim-libnotify.c: re-add features with gaim-2.0.0-beta4
-	API support.
+	* src/gaim-libnotify.c: re-add features with gaim-2.0.0-beta4 API
+	support.
 
 2006-09-30  Duarte Henriques <duarte.henriques@gmail.com>
 
@@ -16,18 +21,18 @@
 2006-06-22  Duarte Henriques <duarte.henriques@gmail.com>
 
 	* src/gaim-libnotify.c: fix bug #1492483, Empty string on weird
-	characters by escaping and (as a bonus) truncating the name on
-	the title.
+	characters by escaping and (as a bonus) truncating the name on the
+	title.
 
 2006-04-28  Duarte Henriques <duarte.henriques@gmail.com>
 
 	* src/gaim-libnotify.c: workaround for libnotify API strangeness:
-	  we have to call notification_show() after an update.
+	we have to call notification_show() after an update.
 
 2006-04-11  Steve Frécinaux <steve@istique.net>
 
 	* src/gaim-libnotify.c: Let the GtkPixbufLoader detect the image
-	  type by itself (fixes crash).
+	type by itself (fixes crash).
 
 2006-03-30  Duarte Henriques <duarte.henriques@gmail.com>
 
@@ -36,31 +41,32 @@
 2006-02-10  Duarte Henriques <duarte.henriques@gmail.com>
 
 	* src/gaim-libnotify.c: fix bug truncating string in middle of a
-	  utf-8 character.
+	utf-8 character.
 
 2006-02-10  Duarte Henriques <duarte.henriques@gmail.com>
 
 	* src/gaim-libnotify.c: use g_object_unref() instead of g_free()
-	  to free the pixbuf_loader, fixes crash (I hope).
+	to free the pixbuf_loader, fixes crash (I hope).
 
 2006-02-10  Carl van Tonder <carlishere@hotmail.com>
 
 	* src/gaim-libnotify.c: Add preference: blocked - ignore signon
-	  and message events from blocked buddies.
+	and message events from blocked buddies.
 
 2006-03-02  Duarte Henriques <duarte.henriques@gmail.com>
 
 	* src/gaim-libnotify.c: escape messages so that it works when
-	  messages have '<' or '>' characters.
+	messages have '<' or '>' characters.
 
 2006-02-27  Duarte Henriques <duarte.henriques@gmail.com>
 
 	* src/gaim-libnotify.c: Refactor of icon code, [s|g]et_user_data
-	  converted to gobject_[s|g]et_data. Untested. Icons work again!
+	converted to gobject_[s|g]et_data. Untested. Icons work again!
 
 2006-02-26  Carl Van Tonder <carlishere@hotmail.com>
 
-	* src/gaim-libnotify.c: Add Preferences: newmsg, convonly and signon.
+	* src/gaim-libnotify.c: Add Preferences: newmsg, convonly and
+	signon.
 
 2005-12-24  Duarte Henriques <duarte.henriques@gmail.com>
 
@@ -69,12 +75,12 @@
 2005-07-09  Duarte Henriques <duarte.henriques@gmail.com>
 
 	* src/gaim-libnotify.c: Add hash_table for buddies, so that the
-	  same handle is used for the same buddy.
+	same handle is used for the same buddy.
 
 2005-07-09  Duarte Henriques <duarte.henriques@gmail.com>
 
 	* src/gaim-libnotify.c: Add avatar support with help from Ezequiel
-	  Pérez.
+	Pérez.
 
 2005-07-09  Duarte Henriques <duarte.henriques@gmail.com>
 
@@ -93,9 +99,9 @@
 
 2005-07-08  Duarte Henriques <duarte.henriques@gmail.com>
 
-	* src/gaim-libnotify.c: (notify_cb): Adapted from patch by Ezequiel
-	  Pérez to provide an action callback - opens the conversation.
-	  Thanks Ezequiel!
+	* src/gaim-libnotify.c: (notify_cb): Adapted from patch by
+	Ezequiel Pérez to provide an action callback - opens the
+	conversation.  Thanks Ezequiel!
 
 2005-07-07  Duarte Henriques  <duarte.henriques@gmail.com>
 

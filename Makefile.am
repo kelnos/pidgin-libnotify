@@ -6,5 +6,5 @@ EXTRA_DIST = \
 		README \
 		COPYING
 
-SUBDIRS = intl po src
+SUBDIRS = po src
 

@@ -34,7 +34,7 @@
 #include <privacy.h>
 
 /* for gaim_gtk_create_prpl_icon */
-#include <gaim/gtkutils.h>
+#include <gtkutils.h>
 
 #include <libnotify/notify.h>
 
