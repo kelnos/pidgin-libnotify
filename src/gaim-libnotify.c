@@ -110,6 +110,10 @@ event_connection_throttle (GaimConnection *gc, gpointer data)
 {
 	GaimAccount *account;
 
+	/* TODO: this function gets called after buddy signs on for GTalk
+	   users who have themselves as a buddy */
+	gaim_debug_info (PLUGIN_ID, "event_connection_throttle() called\n");
+
 	if (!gc)
 		return;
 
