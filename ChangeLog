@@ -1,3 +1,9 @@
+2006-11-25  Eduardo Perez Ureta <eperez@users.sourceforge.net>
+
+	* configure.ac: intl directory is not needed anymore.
+	* autogen.sh: setup-gettext is deprecated.
+	* setup-gettext: removed (deprecated)
+
 2006-11-17  Duarte Henriques <duarte.henriques@gmail.com>
 
 	* src/gaim-libnotify.c: fix i18n framework and include

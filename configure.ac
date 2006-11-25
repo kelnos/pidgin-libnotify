@@ -121,7 +121,6 @@ AC_CONFIG_COMMANDS_POST([
 #
 AC_OUTPUT([Makefile
 		   VERSION
-		   intl/Makefile
 		   po/Makefile.in
 		   src/Makefile
 		  ])
