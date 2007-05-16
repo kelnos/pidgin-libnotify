@@ -3,7 +3,7 @@
 # gaim-encryption configure script, thanks guys ;)
 #
 
-AC_INIT([gaim-libnotify], [0.13], [nothing])
+AC_INIT([pidgin-libnotify], [0.13], [nothing])
 AC_CANONICAL_SYSTEM
 AM_CONFIG_HEADER(config.h)
 
@@ -34,7 +34,7 @@ AH_BOTTOM([
 # Setup gettext
 #
 AC_PROG_INTLTOOL
-GETTEXT_PACKAGE=gaim-libnotify
+GETTEXT_PACKAGE=pidgin-libnotify
 AC_SUBST(GETTEXT_PACKAGE)
 ALL_LINGUAS="es fr it nl pl pt pt_BR sl"
 AM_GLIB_GNU_GETTEXT
@@ -82,19 +82,34 @@ AC_SUBST(GTK_CFLAGS)
 AC_SUBST(GTK_LIBS)
 
 #
-# Check for gaim
+# Check for libpurple
 #
 
-PKG_CHECK_MODULES(GAIM, gaim >= 2.0.0,
+PKG_CHECK_MODULES(LIBPURPLE, purple >= 2.0.0,
 [
-	AC_DEFINE(HAVE_GAIM, 1, [Define if we've found gaim.])
+	AC_DEFINE(HAVE_LIBPURPLE, 1, [Define if we've found libpurple.])
 ])
 
-AC_SUBST(GAIM_CFLAGS)
-GAIM_LIBDIR=`pkg-config --variable=libdir gaim`
-GAIM_DATADIR=`pkg-config --variable=datadir gaim`
-AC_SUBST(GAIM_LIBDIR)
-AC_SUBST(GAIM_DATADIR)
+AC_SUBST(LIBPURPLE_CFLAGS)
+LIBPURPLE_LIBDIR=`pkg-config --variable=libdir purple`
+LIBPURPLE_DATADIR=`pkg-config --variable=datadir purple`
+AC_SUBST(LIBPURPLE_LIBDIR)
+AC_SUBST(LIBPURPLE_DATADIR)
+
+#
+# Check for pidgin
+#
+
+PKG_CHECK_MODULES(PIDGIN, pidgin >= 2.0.0,
+[
+  AC_DEFINE(HAVE_PIDGIN, 1, [Define if we've found pidgin.])
+])
+
+AC_SUBST(PIDGIN_CFLAGS)
+PIDGIN_LIBDIR=`pkg-config --variable=libdir pidgin`
+PIDGIN_DATADIR=`pkg-config --variable=datadir pidgin`
+AC_SUBST(PIDGIN_LIBDIR)
+AC_SUBST(PIDGIN_DATADIR)
 
 #
 # Check if plugins are enabled
@@ -130,8 +145,9 @@ echo Configuration complete
 echo;
 echo Debugging enabled..............: $enable_debug
 echo Deprecated API enabled.........: $enable_deprecated
-#echo Gaim API.......................: $GAIM_CFLAGS
+#echo libpurple API..................: $LIBPURPLE_CFLAGS
+#echo pidgin API.....................: $PIDGIN_CFLAGS
 echo;
 echo Type make to compile
-echo Thank you for using gaim-libnotify
+echo Thank you for using pidgin-libnotify
 echo;

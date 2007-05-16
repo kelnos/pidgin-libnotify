@@ -1,5 +1,5 @@
 /*
- * Gaim-libnotify - Provides a libnotify interface for Gaim
+ * Pidgin-libnotify - Provides a libnotify interface for Pidgin
  * Copyright (C) 2005 Duarte Henriques
  *
  * This program is free software; you can redistribute it and/or
@@ -23,59 +23,59 @@
 
 #include "gln_intl.h"
 
-#ifndef GAIM_PLUGINS
-#define GAIM_PLUGINS
+#ifndef PURPLE_PLUGINS
+#define PURPLE_PLUGINS
 #endif
 
-#include <gaim.h>
+#include <pidgin.h>
 #include <version.h>
 #include <debug.h>
 #include <util.h>
 #include <privacy.h>
 
-/* for gaim_gtk_create_prpl_icon */
+/* for pidgin_create_prpl_icon */
 #include <gtkutils.h>
 
 #include <libnotify/notify.h>
 
 #include <string.h>
 
-#define PLUGIN_ID "gaim-libnotify"
+#define PLUGIN_ID "pidgin-libnotify"
 
 static GHashTable *buddy_hash;
 
-static GaimPluginPrefFrame *
-get_plugin_pref_frame (GaimPlugin *plugin)
+static PurplePluginPrefFrame *
+get_plugin_pref_frame (PurplePlugin *plugin)
 {
-	GaimPluginPrefFrame *frame;
-	GaimPluginPref *ppref;
+	PurplePluginPrefFrame *frame;
+	PurplePluginPref *ppref;
 
-	frame = gaim_plugin_pref_frame_new ();
+	frame = purple_plugin_pref_frame_new ();
 
-	ppref = gaim_plugin_pref_new_with_name_and_label (
+	ppref = purple_plugin_pref_new_with_name_and_label (
                             "/plugins/gtk/libnotify/newmsg",
                             _("New messages"));
-	gaim_plugin_pref_frame_add (frame, ppref);
+	purple_plugin_pref_frame_add (frame, ppref);
 
-	ppref = gaim_plugin_pref_new_with_name_and_label (
+	ppref = purple_plugin_pref_new_with_name_and_label (
                             "/plugins/gtk/libnotify/newconvonly",
                             _("Only new conversations"));
-	gaim_plugin_pref_frame_add (frame, ppref);
+	purple_plugin_pref_frame_add (frame, ppref);
 
-	ppref = gaim_plugin_pref_new_with_name_and_label (
+	ppref = purple_plugin_pref_new_with_name_and_label (
                             "/plugins/gtk/libnotify/blocked",
                             _("Ignore events from blocked users"));
-	gaim_plugin_pref_frame_add (frame, ppref);
+	purple_plugin_pref_frame_add (frame, ppref);
 
-	ppref = gaim_plugin_pref_new_with_name_and_label (
+	ppref = purple_plugin_pref_new_with_name_and_label (
                             "/plugins/gtk/libnotify/signon",
                             _("Buddy signs on"));
-	gaim_plugin_pref_frame_add (frame, ppref);
+	purple_plugin_pref_frame_add (frame, ppref);
 
-	ppref = gaim_plugin_pref_new_with_name_and_label (
+	ppref = purple_plugin_pref_new_with_name_and_label (
                             "/plugins/gtk/libnotify/signoff",
                             _("Buddy signs off"));
-	gaim_plugin_pref_frame_add (frame, ppref);
+	purple_plugin_pref_frame_add (frame, ppref);
 
 	return frame;
 }
@@ -86,19 +86,19 @@ static GList *just_signed_on_accounts = NULL;
 static gboolean
 event_connection_throttle_cb (gpointer data)
 {
-	GaimAccount *account;
+	PurpleAccount *account;
 
-	account = (GaimAccount *)data;
+	account = (PurpleAccount *)data;
 
 	if (!account)
 		return FALSE;
 
-	if (!gaim_account_get_connection (account)) {
+	if (!purple_account_get_connection (account)) {
 		just_signed_on_accounts = g_list_remove (just_signed_on_accounts, account);
 		return FALSE;
 	}
 
-	if (!gaim_account_is_connected (account))
+	if (!purple_account_is_connected (account))
 		return TRUE;
 
 	just_signed_on_accounts = g_list_remove (just_signed_on_accounts, account);
@@ -106,18 +106,18 @@ event_connection_throttle_cb (gpointer data)
 }
 
 static void
-event_connection_throttle (GaimConnection *gc, gpointer data)
+event_connection_throttle (PurpleConnection *gc, gpointer data)
 {
-	GaimAccount *account;
+	PurpleAccount *account;
 
 	/* TODO: this function gets called after buddy signs on for GTalk
 	   users who have themselves as a buddy */
-	gaim_debug_info (PLUGIN_ID, "event_connection_throttle() called\n");
+	purple_debug_info (PLUGIN_ID, "event_connection_throttle() called\n");
 
 	if (!gc)
 		return;
 
-	account = gaim_connection_get_account(gc);
+	account = purple_connection_get_account(gc);
 	if (!account)
 		return;
 
@@ -127,7 +127,7 @@ event_connection_throttle (GaimConnection *gc, gpointer data)
 
 /* do NOT g_free() the string returned by this function */
 static gchar *
-best_name (GaimBuddy *buddy)
+best_name (PurpleBuddy *buddy)
 {
 	if (buddy->alias) {
 		return buddy->alias;
@@ -139,14 +139,14 @@ best_name (GaimBuddy *buddy)
 }
 
 static GdkPixbuf *
-pixbuf_from_buddy_icon (GaimBuddyIcon *buddy_icon)
+pixbuf_from_buddy_icon (PurpleBuddyIcon *buddy_icon)
 {
 	GdkPixbuf *icon;
 	const guchar *data;
 	size_t len;
 	GdkPixbufLoader *loader;
 
-	data = gaim_buddy_icon_get_data (buddy_icon, &len);
+	data = purple_buddy_icon_get_data (buddy_icon, &len);
 
 	loader = gdk_pixbuf_loader_new ();
 	gdk_pixbuf_loader_set_size (loader, 48, 48);
@@ -168,23 +168,23 @@ static void
 action_cb (NotifyNotification *notification,
 		   gchar *action, gpointer user_data)
 {
-	GaimBuddy *buddy = NULL;
-	GaimConversation *conv = NULL;
+	PurpleBuddy *buddy = NULL;
+	PurpleConversation *conv = NULL;
 
-	gaim_debug_info (PLUGIN_ID, "action_cb(), "
+	purple_debug_info (PLUGIN_ID, "action_cb(), "
 					"notification: 0x%x, action: '%s'", notification, action);
 
-	buddy = (GaimBuddy *)g_object_get_data (G_OBJECT(notification), "buddy");
+	buddy = (PurpleBuddy *)g_object_get_data (G_OBJECT(notification), "buddy");
 
 	if (!buddy) {
-		gaim_debug_warning (PLUGIN_ID, "Got no buddy!");
+		purple_debug_warning (PLUGIN_ID, "Got no buddy!");
 		return;
 	}
 
-	conv = gaim_find_conversation_with_account (GAIM_CONV_TYPE_ANY, buddy->name, buddy->account);
+	conv = purple_find_conversation_with_account (PURPLE_CONV_TYPE_ANY, buddy->name, buddy->account);
 
 	if (!conv) {
-		conv = gaim_conversation_new (GAIM_CONV_TYPE_IM,
+		conv = purple_conversation_new (PURPLE_CONV_TYPE_IM,
 									  buddy->account,
 									  buddy->name);
 	}
@@ -196,11 +196,11 @@ action_cb (NotifyNotification *notification,
 static gboolean
 closed_cb (NotifyNotification *notification)
 {
-	GaimBuddy *buddy;
+	PurpleBuddy *buddy;
 
-	gaim_debug_info (PLUGIN_ID, "closed_cb(), notification: 0x%x\n", notification);
+	purple_debug_info (PLUGIN_ID, "closed_cb(), notification: 0x%x\n", notification);
 
-	buddy = (GaimBuddy *)g_object_get_data (G_OBJECT(notification), "buddy");
+	buddy = (PurpleBuddy *)g_object_get_data (G_OBJECT(notification), "buddy");
 	if (buddy)
 		g_hash_table_remove (buddy_hash, buddy);
 
@@ -239,11 +239,11 @@ truncate_escape_string (const gchar *str,
 static void
 notify (const gchar *title,
 		const gchar *body,
-		GaimBuddy *buddy)
+		PurpleBuddy *buddy)
 {
 	NotifyNotification *notification = NULL;
 	GdkPixbuf *icon;
-	GaimBuddyIcon *buddy_icon;
+	PurpleBuddyIcon *buddy_icon;
 	gchar *tr_body;
 
 	if (body)
@@ -258,7 +258,7 @@ notify (const gchar *title,
 		/* this shouldn't be necessary, file a bug */
 		notify_notification_show (notification, NULL);
 
-		gaim_debug_info (PLUGIN_ID, "notify(), update: "
+		purple_debug_info (PLUGIN_ID, "notify(), update: "
 						 "title: '%s', body: '%s', buddy: '%s'\n",
 						 title, tr_body, best_name (buddy));
 
@@ -266,26 +266,26 @@ notify (const gchar *title,
 		return;
 	}
 	notification = notify_notification_new (title, tr_body, NULL, NULL);
-	gaim_debug_info (PLUGIN_ID, "notify(), new: "
+	purple_debug_info (PLUGIN_ID, "notify(), new: "
 					 "title: '%s', body: '%s', buddy: '%s'\n",
 					 title, tr_body, best_name (buddy));
 
 	g_free (tr_body);
 
-	buddy_icon = gaim_buddy_get_icon (buddy);
+	buddy_icon = purple_buddy_get_icon (buddy);
 	if (buddy_icon) {
 		icon = pixbuf_from_buddy_icon (buddy_icon);
-		gaim_debug_info (PLUGIN_ID, "notify(), has a buddy icon.\n");
+		purple_debug_info (PLUGIN_ID, "notify(), has a buddy icon.\n");
 	} else {
-		icon = gaim_gtk_create_prpl_icon (buddy->account, 1);
-		gaim_debug_info (PLUGIN_ID, "notify(), has a prpl icon.\n");
+		icon = pidgin_create_prpl_icon (buddy->account, 1);
+		purple_debug_info (PLUGIN_ID, "notify(), has a prpl icon.\n");
 	}
 
 	if (icon) {
 		notify_notification_set_icon_from_pixbuf (notification, icon);
 		g_object_unref (icon);
 	} else {
-		gaim_debug_warning (PLUGIN_ID, "notify(), couldn't find any icon!\n");
+		purple_debug_warning (PLUGIN_ID, "notify(), couldn't find any icon!\n");
 	}
 
 	g_hash_table_insert (buddy_hash, buddy, notification);
@@ -299,13 +299,13 @@ notify (const gchar *title,
 	notify_notification_add_action (notification, "show", _("Show"), action_cb, NULL, NULL);
 
 	if (!notify_notification_show (notification, NULL)) {
-		gaim_debug_error (PLUGIN_ID, "notify(), failed to send notification\n");
+		purple_debug_error (PLUGIN_ID, "notify(), failed to send notification\n");
 	}
 
 }
 
 static void
-notify_buddy_signon_cb (GaimBuddy *buddy,
+notify_buddy_signon_cb (PurpleBuddy *buddy,
 						gpointer data)
 {
 	gchar *tr_name, *title;
@@ -313,14 +313,14 @@ notify_buddy_signon_cb (GaimBuddy *buddy,
 
 	g_return_if_fail (buddy);
 
-	if (!gaim_prefs_get_bool ("/plugins/gtk/libnotify/signon"))
+	if (!purple_prefs_get_bool ("/plugins/gtk/libnotify/signon"))
 		return;
 
 	if (g_list_find (just_signed_on_accounts, buddy->account))
 		return;
 
-	blocked = gaim_prefs_get_bool ("/plugins/gtk/libnotify/blocked");
-	if (!gaim_privacy_check (buddy->account, buddy->name) && blocked)
+	blocked = purple_prefs_get_bool ("/plugins/gtk/libnotify/blocked");
+	if (!purple_privacy_check (buddy->account, buddy->name) && blocked)
 		return;
 
 	tr_name = truncate_escape_string (best_name (buddy), 25);
@@ -334,7 +334,7 @@ notify_buddy_signon_cb (GaimBuddy *buddy,
 }
 
 static void
-notify_buddy_signoff_cb (GaimBuddy *buddy,
+notify_buddy_signoff_cb (PurpleBuddy *buddy,
 						 gpointer data)
 {
 	gchar *tr_name, *title;
@@ -342,14 +342,14 @@ notify_buddy_signoff_cb (GaimBuddy *buddy,
 
 	g_return_if_fail (buddy);
 
-	if (!gaim_prefs_get_bool ("/plugins/gtk/libnotify/signoff"))
+	if (!purple_prefs_get_bool ("/plugins/gtk/libnotify/signoff"))
 		return;
 
 	if (g_list_find (just_signed_on_accounts, buddy->account))
 		return;
 
-	blocked = gaim_prefs_get_bool ("/plugins/gtk/libnotify/blocked");
-	if (!gaim_privacy_check (buddy->account, buddy->name) && blocked)
+	blocked = purple_prefs_get_bool ("/plugins/gtk/libnotify/blocked");
+	if (!purple_privacy_check (buddy->account, buddy->name) && blocked)
 		return;
 
 	tr_name = truncate_escape_string (best_name (buddy), 25);
@@ -363,26 +363,26 @@ notify_buddy_signoff_cb (GaimBuddy *buddy,
 }
 
 static void
-notify_msg_sent (GaimAccount *account,
+notify_msg_sent (PurpleAccount *account,
 				 const gchar *sender,
 				 const gchar *message)
 {
-	GaimBuddy *buddy;
+	PurpleBuddy *buddy;
 	gchar *title, *body, *tr_name;
 	gboolean blocked;
 
-	buddy = gaim_find_buddy (account, sender);
+	buddy = purple_find_buddy (account, sender);
 	if (!buddy)
 		return;
 
-	blocked = gaim_prefs_get_bool ("/plugins/gtk/libnotify/blocked");
-	if (!gaim_privacy_check(account, sender) && blocked)
+	blocked = purple_prefs_get_bool ("/plugins/gtk/libnotify/blocked");
+	if (!purple_privacy_check(account, sender) && blocked)
 		return;
 
 	tr_name = truncate_escape_string (best_name (buddy), 25);
 
 	title = g_strdup_printf (_("%s says:"), tr_name);
-	body = gaim_markup_strip_html (message);
+	body = purple_markup_strip_html (message);
 
 	notify (title, body, buddy);
 
@@ -392,28 +392,28 @@ notify_msg_sent (GaimAccount *account,
 }
 
 static void
-notify_new_message_cb (GaimAccount *account,
+notify_new_message_cb (PurpleAccount *account,
 					   const gchar *sender,
 					   const gchar *message,
 					   int flags,
 					   gpointer data)
 {
-	GaimConversation *conv;
+	PurpleConversation *conv;
 
-	if (!gaim_prefs_get_bool ("/plugins/gtk/libnotify/newmsg"))
+	if (!purple_prefs_get_bool ("/plugins/gtk/libnotify/newmsg"))
 		return;
 
-	conv = gaim_find_conversation_with_account (GAIM_CONV_TYPE_IM, sender, account);
+	conv = purple_find_conversation_with_account (PURPLE_CONV_TYPE_IM, sender, account);
 
 #ifndef DEBUG /* in debug mode, always show notifications */
-	if (conv && gaim_conversation_has_focus (conv)) {
-		gaim_debug_info (PLUGIN_ID, "Conversation has focus 0x%x\n", conv);
+	if (conv && purple_conversation_has_focus (conv)) {
+		purple_debug_info (PLUGIN_ID, "Conversation has focus 0x%x\n", conv);
 		return;
 	}
 #endif
 
-	if (conv && gaim_prefs_get_bool ("/plugins/gtk/libnotify/newconvonly")) {
-		gaim_debug_info (PLUGIN_ID, "Conversation is not new 0x%x\n", conv);
+	if (conv && purple_prefs_get_bool ("/plugins/gtk/libnotify/newconvonly")) {
+		purple_debug_info (PLUGIN_ID, "Conversation is not new 0x%x\n", conv);
 		return;
 	}
 
@@ -421,15 +421,15 @@ notify_new_message_cb (GaimAccount *account,
 }
 
 static void
-notify_chat_nick (GaimAccount *account,
+notify_chat_nick (PurpleAccount *account,
 				  const gchar *sender,
 				  const gchar *message,
-				  GaimConversation *conv,
+				  PurpleConversation *conv,
 				  gpointer data)
 {
 	gchar *nick;
 
-	nick = (gchar *)gaim_conv_chat_get_nick (GAIM_CONV_CHAT(conv));
+	nick = (gchar *)purple_conv_chat_get_nick (PURPLE_CONV_CHAT(conv));
 	if (nick && !strcmp (sender, nick))
 		return;
 
@@ -440,63 +440,63 @@ notify_chat_nick (GaimAccount *account,
 }
 
 static gboolean
-plugin_load (GaimPlugin *plugin)
+plugin_load (PurplePlugin *plugin)
 {
 	void *conv_handle, *blist_handle, *conn_handle;
 
-	if (!notify_is_initted () && !notify_init ("Gaim")) {
-		gaim_debug_error (PLUGIN_ID, "libnotify not running!\n");
+	if (!notify_is_initted () && !notify_init ("Pidgin")) {
+		purple_debug_error (PLUGIN_ID, "libnotify not running!\n");
 		return FALSE;
 	}
 
-	conv_handle = gaim_conversations_get_handle ();
-	blist_handle = gaim_blist_get_handle ();
-	conn_handle = gaim_connections_get_handle();
+	conv_handle = purple_conversations_get_handle ();
+	blist_handle = purple_blist_get_handle ();
+	conn_handle = purple_connections_get_handle();
 
 	buddy_hash = g_hash_table_new (NULL, NULL);
 
-	gaim_signal_connect (blist_handle, "buddy-signed-on", plugin,
-						GAIM_CALLBACK(notify_buddy_signon_cb), NULL);
+	purple_signal_connect (blist_handle, "buddy-signed-on", plugin,
+						PURPLE_CALLBACK(notify_buddy_signon_cb), NULL);
 
-	gaim_signal_connect (blist_handle, "buddy-signed-off", plugin,
-						GAIM_CALLBACK(notify_buddy_signoff_cb), NULL);
+	purple_signal_connect (blist_handle, "buddy-signed-off", plugin,
+						PURPLE_CALLBACK(notify_buddy_signoff_cb), NULL);
 
-	gaim_signal_connect (conv_handle, "received-im-msg", plugin,
-						GAIM_CALLBACK(notify_new_message_cb), NULL);
+	purple_signal_connect (conv_handle, "received-im-msg", plugin,
+						PURPLE_CALLBACK(notify_new_message_cb), NULL);
 
-	gaim_signal_connect (conv_handle, "received-chat-msg", plugin,
-						GAIM_CALLBACK(notify_chat_nick), NULL);
+	purple_signal_connect (conv_handle, "received-chat-msg", plugin,
+						PURPLE_CALLBACK(notify_chat_nick), NULL);
 
 	/* used just to not display the flood of guifications we'd get */
-	gaim_signal_connect (conn_handle, "signed-on", plugin,
-						GAIM_CALLBACK(event_connection_throttle), NULL);
+	purple_signal_connect (conn_handle, "signed-on", plugin,
+						PURPLE_CALLBACK(event_connection_throttle), NULL);
 
 	return TRUE;
 }
 
 static gboolean
-plugin_unload (GaimPlugin *plugin)
+plugin_unload (PurplePlugin *plugin)
 {
 	void *conv_handle, *blist_handle, *conn_handle;
 
-	conv_handle = gaim_conversations_get_handle ();
-	blist_handle = gaim_blist_get_handle ();
-	conn_handle = gaim_connections_get_handle();
+	conv_handle = purple_conversations_get_handle ();
+	blist_handle = purple_blist_get_handle ();
+	conn_handle = purple_connections_get_handle();
 
-	gaim_signal_disconnect (blist_handle, "buddy-signed-on", plugin,
-							GAIM_CALLBACK(notify_buddy_signon_cb));
+	purple_signal_disconnect (blist_handle, "buddy-signed-on", plugin,
+							PURPLE_CALLBACK(notify_buddy_signon_cb));
 
-	gaim_signal_disconnect (blist_handle, "buddy-signed-off", plugin,
-							GAIM_CALLBACK(notify_buddy_signoff_cb));
+	purple_signal_disconnect (blist_handle, "buddy-signed-off", plugin,
+							PURPLE_CALLBACK(notify_buddy_signoff_cb));
 
-	gaim_signal_disconnect (conv_handle, "received-im-msg", plugin,
-							GAIM_CALLBACK(notify_new_message_cb));
+	purple_signal_disconnect (conv_handle, "received-im-msg", plugin,
+							PURPLE_CALLBACK(notify_new_message_cb));
 
-	gaim_signal_disconnect (conv_handle, "received-chat-msg", plugin,
-							GAIM_CALLBACK(notify_chat_nick));
+	purple_signal_disconnect (conv_handle, "received-chat-msg", plugin,
+							PURPLE_CALLBACK(notify_chat_nick));
 
-	gaim_signal_disconnect (conn_handle, "signed-on", plugin,
-							GAIM_CALLBACK(event_connection_throttle));
+	purple_signal_disconnect (conn_handle, "signed-on", plugin,
+							PURPLE_CALLBACK(event_connection_throttle));
 
 	g_hash_table_destroy (buddy_hash);
 
@@ -505,21 +505,21 @@ plugin_unload (GaimPlugin *plugin)
 	return TRUE;
 }
 
-static GaimPluginUiInfo prefs_info = {
+static PurplePluginUiInfo prefs_info = {
     get_plugin_pref_frame,
     0,						/* page num (Reserved) */
     NULL					/* frame (Reserved) */
 };
 
-static GaimPluginInfo info = {
-    GAIM_PLUGIN_MAGIC,										/* api version */
-    GAIM_MAJOR_VERSION,
-    GAIM_MINOR_VERSION,
-    GAIM_PLUGIN_STANDARD,									/* type */
+static PurplePluginInfo info = {
+    PURPLE_PLUGIN_MAGIC,										/* api version */
+    PURPLE_MAJOR_VERSION,
+    PURPLE_MINOR_VERSION,
+    PURPLE_PLUGIN_STANDARD,									/* type */
     0,														/* ui requirement */
     0,														/* flags */
     NULL,													/* dependencies */
-    GAIM_PRIORITY_DEFAULT,									/* priority */
+    PURPLE_PRIORITY_DEFAULT,									/* priority */
     
     PLUGIN_ID,												/* id */
     NULL,													/* name */
@@ -539,22 +539,22 @@ static GaimPluginInfo info = {
 };
 
 static void
-init_plugin (GaimPlugin *plugin)
+init_plugin (PurplePlugin *plugin)
 {
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	bind_textdomain_codeset (PACKAGE, "UTF-8");
 
 	info.name = _("Libnotify Popups");
 	info.summary = _("Displays popups via libnotify.");
-	info.description = _("Gaim-libnotify:\nDisplays popups via libnotify.");
+	info.description = _("Pidgin-libnotify:\nDisplays popups via libnotify.");
 
-	gaim_prefs_add_none ("/plugins/gtk/libnotify");
-	gaim_prefs_add_bool ("/plugins/gtk/libnotify/newmsg", TRUE);
-	gaim_prefs_add_bool ("/plugins/gtk/libnotify/blocked", TRUE);
-	gaim_prefs_add_bool ("/plugins/gtk/libnotify/newconvonly", FALSE);
-	gaim_prefs_add_bool ("/plugins/gtk/libnotify/signon", TRUE);
-	gaim_prefs_add_bool ("/plugins/gtk/libnotify/signoff", FALSE);
+	purple_prefs_add_none ("/plugins/gtk/libnotify");
+	purple_prefs_add_bool ("/plugins/gtk/libnotify/newmsg", TRUE);
+	purple_prefs_add_bool ("/plugins/gtk/libnotify/blocked", TRUE);
+	purple_prefs_add_bool ("/plugins/gtk/libnotify/newconvonly", FALSE);
+	purple_prefs_add_bool ("/plugins/gtk/libnotify/signon", TRUE);
+	purple_prefs_add_bool ("/plugins/gtk/libnotify/signoff", FALSE);
 }
 
-GAIM_INIT_PLUGIN(notify, init_plugin, info)
+PURPLE_INIT_PLUGIN(notify, init_plugin, info)
 

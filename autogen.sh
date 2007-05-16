@@ -2,33 +2,33 @@
 
 (glib-gettextize --version) < /dev/null > /dev/null 2>&1 || {
 	echo;
-	echo "You must have gettext installed to compile gaim-libnotify";
+	echo "You must have gettext installed to compile pidgin-libnotify";
 	echo;
 	exit;
 }
 
 (libtoolize --version) < /dev/null > /dev/null 2>&1 || {
 	echo;
-	echo "You must have libtool installed to compile gaim-libnotify";
+	echo "You must have libtool installed to compile pidgin-libnotify";
 	echo;
 	exit;
 }
 
 (automake --version) < /dev/null > /dev/null 2>&1 || {
 	echo;
-	echo "You must have automake installed to compile gaim-libnotify";
+	echo "You must have automake installed to compile pidgin-libnotify";
 	echo;
 	exit;
 }
 
 (autoconf --version) < /dev/null > /dev/null 2>&1 || {
 	echo;
-	echo "You must have autoconf installed to compile gaim-libnotify";
+	echo "You must have autoconf installed to compile pidgin-libnotify";
 	echo;
 	exit;
 }
 
-echo "Generating configuration files for gaim-libnotify, please wait...."
+echo "Generating configuration files for pidgin-libnotify, please wait...."
 echo;
 
 # Backup po/ChangeLog because gettext likes to change it
