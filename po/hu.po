@@ -1,0 +1,67 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2006-11-01 18:33+0100\n"
+"Last-Translator: Peter Avramucz <muczy@freestart.hu>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Country: HUNGARY\n"
+
+#: src/gaim-libnotify.c:57
+msgid "New messages"
+msgstr "Új üzenetek"
+
+#: src/gaim-libnotify.c:62
+msgid "Only new conversations"
+msgstr "Csak az új beszélgetéseknél"
+
+#: src/gaim-libnotify.c:67
+msgid "Ignore events from blocked users"
+msgstr "Hagyja figyelmen kívűl a blokkolt felhasználókat"
+
+#: src/gaim-libnotify.c:72
+msgid "Buddy signs on"
+msgstr "Partner bejelentkezett"
+
+#: src/gaim-libnotify.c:77
+msgid "Buddy signs off"
+msgstr "Partner kijelentkezett"
+
+#: src/gaim-libnotify.c:295
+msgid "Show"
+msgstr "Mutasd"
+
+#: src/gaim-libnotify.c:324
+#, c-format
+msgid "%s signed on"
+msgstr "%s bejelentkezett"
+
+#: src/gaim-libnotify.c:353
+#, c-format
+msgid "%s signed off"
+msgstr "%s kijelentkezett"
+
+#: src/gaim-libnotify.c:380
+#, c-format
+msgid "%s says:"
+msgstr "%s mondja:"
+
+#: src/gaim-libnotify.c:543
+msgid "Libnotify Popups"
+msgstr "Libnotify buborékok"
+
+#: src/gaim-libnotify.c:544
+msgid "Displays popups via libnotify."
+msgstr "Mutassa a buborékokat libnotify segítségével."
+
+#: src/gaim-libnotify.c:545
+msgid ""
+"Gaim-libnotify:\n"
+"Displays popups via libnotify."
+msgstr ""
+"Gaim-libnotify:\n"
+"Mutassa a buborékokat libnotify segítségével."
+
