@@ -1,3 +1,14 @@
+2007-06-30  Duarte Henriques <duarte.henriques@gmail.com>
+
+	* po/it.po:
+	Update italian translation (Marco Cabizza)
+	* po/zh_CN.po:
+	Add chinese translation (Tao Wei)
+	* po/ro.po:
+	Add romanian translation (Ion Alyn)
+	* po/gl.po:
+	Add galician translation (Ignacio Casal Quinteiro)
+
 2005-11-17  Duarte Henriques <duarte.henriques@gmail.com>
 
 	* po/sl.po: Add slovenian translation by Matic Zgur

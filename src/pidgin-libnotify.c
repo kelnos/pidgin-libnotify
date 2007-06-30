@@ -1,6 +1,6 @@
 /*
  * Pidgin-libnotify - Provides a libnotify interface for Pidgin
- * Copyright (C) 2005 Duarte Henriques
+ * Copyright (C) 2005-2007 Duarte Henriques
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

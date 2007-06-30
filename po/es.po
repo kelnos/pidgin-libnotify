@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gaim-libnotify\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2006-11-17 22:34+0000\n"
+"POT-Creation-Date: 2007-06-30 19:58+0000\n"
 "PO-Revision-Date: 2005-07-08 12:30-0300\n"
 "Last-Translator: Ezequiel Prez <eazel7@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
@@ -16,58 +16,59 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: src/gaim-libnotify.c:57
+#: src/pidgin-libnotify.c:57
 msgid "New messages"
 msgstr ""
 
-#: src/gaim-libnotify.c:62
+#: src/pidgin-libnotify.c:62
 msgid "Only new conversations"
 msgstr ""
 
-#: src/gaim-libnotify.c:67
+#: src/pidgin-libnotify.c:67
 msgid "Ignore events from blocked users"
 msgstr ""
 
-#: src/gaim-libnotify.c:72
+#: src/pidgin-libnotify.c:72
 #, fuzzy
 msgid "Buddy signs on"
 msgstr "%s se ha conectado"
 
-#: src/gaim-libnotify.c:77
+#: src/pidgin-libnotify.c:77
 #, fuzzy
 msgid "Buddy signs off"
 msgstr "%s se ha conectado"
 
-#: src/gaim-libnotify.c:299
+#: src/pidgin-libnotify.c:315
 msgid "Show"
 msgstr "Mostrar"
 
-#: src/gaim-libnotify.c:328
+#: src/pidgin-libnotify.c:347
 #, c-format
 msgid "%s signed on"
 msgstr "%s se ha conectado"
 
-#: src/gaim-libnotify.c:357
+#: src/pidgin-libnotify.c:379
 #, fuzzy, c-format
 msgid "%s signed off"
 msgstr "%s se ha conectado"
 
-#: src/gaim-libnotify.c:384
+#: src/pidgin-libnotify.c:406
 #, c-format
 msgid "%s says:"
 msgstr "%s dice:"
 
-#: src/gaim-libnotify.c:547
+#: src/pidgin-libnotify.c:572
 msgid "Libnotify Popups"
 msgstr ""
 
-#: src/gaim-libnotify.c:548
+#: src/pidgin-libnotify.c:573
 msgid "Displays popups via libnotify."
 msgstr "Muestra avisos mediante libnotify."
 
-#: src/gaim-libnotify.c:549
+#: src/pidgin-libnotify.c:574
+#, fuzzy
 msgid ""
-"Gaim-libnotify:\n"
+"Pidgin-libnotify:\n"
 "Displays popups via libnotify."
 msgstr ""
 "Gaim-libnotify:\n"
