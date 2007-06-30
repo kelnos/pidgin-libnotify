@@ -1,8 +1,16 @@
 0.13
 ==
 
+* rename to pidgin-libnotify
+* adapt to purple and pidgin API (Colin Guthrie)
+* add option: don't show notifications when absent (John Wendell)
+* don't show multiple notifications for the same contact (Duarte Henriques)
 * Fix include headers and i18n framework (Eduardo Pérez)
-* Add slovenian translation by Matic Zgur
+* Add slovenian translation (Matic Zgur)
+* Add chinese translation (Tao Wei)
+* Add romanian translation (Ion Alyn)
+* Add galician translation (Ignacio Casal Quinteiro)
+* Update italian translation (Marco Cabizza)
 
 0.12
 ==
