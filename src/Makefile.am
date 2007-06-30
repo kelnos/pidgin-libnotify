@@ -1,16 +1,16 @@
 gddir = $(LIBPURPLE_LIBDIR)/purple-2
 
-gaim_libnotify_la_LDFLAGS = -module -avoid-version
+pidgin_libnotify_la_LDFLAGS = -module -avoid-version
 
 if PLUGINS
 
-gd_LTLIBRARIES = gaim-libnotify.la
+gd_LTLIBRARIES = pidgin-libnotify.la
 
-gaim_libnotify_la_SOURCES = \
-	gaim-libnotify.c \
+pidgin_libnotify_la_SOURCES = \
+	pidgin-libnotify.c \
 	gln_intl.h
 
-gaim_libnotify_la_LIBADD = $(LIBNOTIFY_LIBS) $(DBUS_LIBS) $(GTK_LIBS)
+pidgin_libnotify_la_LIBADD = $(LIBNOTIFY_LIBS) $(DBUS_LIBS) $(GTK_LIBS)
 
 endif
 

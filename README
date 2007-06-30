@@ -1,12 +1,12 @@
-gaim-libnotify
+pidgin-libnotify
 
 About
 =====
-Gaim-libnotify provides a libnotify interface to Gaim
+pidgin-libnotify provides a libnotify interface to Gaim
 
 INSTALL
 =======
-./configure --with-gaim=PATH/TO/GAIM
+./configure
 make
 make install
 

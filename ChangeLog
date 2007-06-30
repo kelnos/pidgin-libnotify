@@ -1,5 +1,10 @@
 2007-06-30  Duarte Henriques <duarte.henriques@gmail.com>
 
+	* src/gaim-libnotify.c:
+	* src/pidgin-libnotify.c: rename to pidgin-libnotify.c
+
+2007-06-30  Duarte Henriques <duarte.henriques@gmail.com>
+
 	* src/gaim-libnotify.c: fix bug #1657570, don't show multiple
 	notifications for different accounts of the same contact.
 
