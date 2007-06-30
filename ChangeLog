@@ -1,7 +1,7 @@
-2007-04-05  Jonh Wendell <wendell@bani.com.br>
+2007-06-30  Duarte Henriques <duarte.henriques@gmail.com>
 
-	* src/gaim-libnotify.c: fix bug #1648831, don't show
-	notifications when absent, with an option disabled by default.
+	* src/gaim-libnotify.c: fix bug #1657570, don't show multiple
+	notifications for different accounts of the same contact.
 
 2007-06-30  Duarte Henriques <duarte.henriques@gmail.com>
 
@@ -9,6 +9,11 @@
 	* configure.ac:
 	* Makefile.am:
 	  apply pidgin conversion patch by Colin Guthrie
+
+2007-04-05  Jonh Wendell <wendell@bani.com.br>
+
+	* src/gaim-libnotify.c: fix bug #1648831, don't show
+	notifications when absent, with an option disabled by default.
 
 2006-11-25  Eduardo Perez Ureta <eperez@users.sourceforge.net>
 

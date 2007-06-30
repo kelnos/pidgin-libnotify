@@ -106,7 +106,7 @@ event_connection_throttle_cb (gpointer data)
 }
 
 static void
-event_connection_throttle (PurpleConnection *gc, gpointer data)
+event_connection_throttle (PurpleConnection *conn, gpointer data)
 {
 	PurpleAccount *account;
 
@@ -114,10 +114,10 @@ event_connection_throttle (PurpleConnection *gc, gpointer data)
 	   users who have themselves as a buddy */
 	purple_debug_info (PLUGIN_ID, "event_connection_throttle() called\n");
 
-	if (!gc)
+	if (!conn)
 		return;
 
-	account = purple_connection_get_account(gc);
+	account = purple_connection_get_account(conn);
 	if (!account)
 		return;
 
@@ -196,13 +196,13 @@ action_cb (NotifyNotification *notification,
 static gboolean
 closed_cb (NotifyNotification *notification)
 {
-	PurpleBuddy *buddy;
+	PurpleContact *contact;
 
 	purple_debug_info (PLUGIN_ID, "closed_cb(), notification: 0x%x\n", notification);
 
-	buddy = (PurpleBuddy *)g_object_get_data (G_OBJECT(notification), "buddy");
-	if (buddy)
-		g_hash_table_remove (buddy_hash, buddy);
+	contact = (PurpleContact *)g_object_get_data (G_OBJECT(notification), "contact");
+	if (contact)
+		g_hash_table_remove (buddy_hash, contact);
 
 	g_object_unref (G_OBJECT(notification));
 
@@ -258,13 +258,16 @@ notify (const gchar *title,
 	GdkPixbuf *icon;
 	PurpleBuddyIcon *buddy_icon;
 	gchar *tr_body;
+	PurpleContact *contact;
+
+	contact = purple_buddy_get_contact (buddy);
 
 	if (body)
 		tr_body = truncate_escape_string (body, 60);
 	else
 		tr_body = NULL;
 
-	notification = g_hash_table_lookup (buddy_hash, buddy);
+	notification = g_hash_table_lookup (buddy_hash, contact);
 
 	if (notification != NULL) {
 		notify_notification_update (notification, title, tr_body, NULL);
@@ -301,9 +304,9 @@ notify (const gchar *title,
 		purple_debug_warning (PLUGIN_ID, "notify(), couldn't find any icon!\n");
 	}
 
-	g_hash_table_insert (buddy_hash, buddy, notification);
+	g_hash_table_insert (buddy_hash, contact, notification);
 
-	g_object_set_data (G_OBJECT(notification), "buddy", buddy);
+	g_object_set_data (G_OBJECT(notification), "contact", contact);
 
 	g_signal_connect (notification, "closed", G_CALLBACK(closed_cb), NULL);
 
