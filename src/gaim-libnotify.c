@@ -236,6 +236,19 @@ truncate_escape_string (const gchar *str,
 	return escaped_str;
 }
 
+static gboolean
+should_notify_unavailable (PurpleAccount *account)
+{
+	PurpleStatus *status;
+
+	if (!purple_prefs_get_bool ("/plugins/gtk/libnotify/only_available"))
+		return TRUE;
+
+	status = purple_account_get_active_status (account);
+
+	return purple_status_is_online (status) && purple_status_is_available (status);
+}
+
 static void
 notify (const gchar *title,
 		const gchar *body,
@@ -323,6 +336,9 @@ notify_buddy_signon_cb (PurpleBuddy *buddy,
 	if (!purple_privacy_check (buddy->account, buddy->name) && blocked)
 		return;
 
+	if (!should_notify_unavailable (purple_buddy_get_account (buddy)))
+		return;
+
 	tr_name = truncate_escape_string (best_name (buddy), 25);
 
 	title = g_strdup_printf (_("%s signed on"), tr_name);
@@ -350,6 +366,9 @@ notify_buddy_signoff_cb (PurpleBuddy *buddy,
 
 	blocked = purple_prefs_get_bool ("/plugins/gtk/libnotify/blocked");
 	if (!purple_privacy_check (buddy->account, buddy->name) && blocked)
+		return;
+
+	if (!should_notify_unavailable (purple_buddy_get_account (buddy)))
 		return;
 
 	tr_name = truncate_escape_string (best_name (buddy), 25);
@@ -416,6 +435,9 @@ notify_new_message_cb (PurpleAccount *account,
 		purple_debug_info (PLUGIN_ID, "Conversation is not new 0x%x\n", conv);
 		return;
 	}
+
+	if (!should_notify_unavailable (account))
+		return;
 
 	notify_msg_sent (account, sender, message);
 }
@@ -554,6 +576,7 @@ init_plugin (PurplePlugin *plugin)
 	purple_prefs_add_bool ("/plugins/gtk/libnotify/newconvonly", FALSE);
 	purple_prefs_add_bool ("/plugins/gtk/libnotify/signon", TRUE);
 	purple_prefs_add_bool ("/plugins/gtk/libnotify/signoff", FALSE);
+	purple_prefs_add_bool ("/plugins/gtk/libnotify/only_available", FALSE);
 }
 
 PURPLE_INIT_PLUGIN(notify, init_plugin, info)
