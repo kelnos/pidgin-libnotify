@@ -77,6 +77,11 @@ get_plugin_pref_frame (PurplePlugin *plugin)
                             _("Buddy signs off"));
 	purple_plugin_pref_frame_add (frame, ppref);
 
+	ppref = purple_plugin_pref_new_with_name_and_label (
+                            "/plugins/gtk/libnotify/only_available",
+                            _("Only when available"));
+	purple_plugin_pref_frame_add (frame, ppref);
+
 	return frame;
 }
 

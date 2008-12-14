@@ -1,3 +1,8 @@
+2008-12-14  Duarte Henriques <duarte.henriques@gmail.com>
+
+	* src/gaim-libnotify.c: really show option to not show
+	notifications when absent.
+
 2007-06-30  Duarte Henriques <duarte.henriques@gmail.com>
 
 	* src/gaim-libnotify.c:
