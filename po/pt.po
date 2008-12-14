@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gaim-libnotify\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2007-06-30 19:58+0000\n"
+"POT-Creation-Date: 2008-12-14 16:31+0000\n"
 "PO-Revision-Date: 2006-03-31 15:32+0100\n"
 "Last-Translator: Duarte Henriques <duarte.henriques@gmail.com>\n"
 "Language-Team: \n"
@@ -36,34 +36,38 @@ msgstr "Contacto liga-se"
 msgid "Buddy signs off"
 msgstr "Contacto desliga-se"
 
-#: src/pidgin-libnotify.c:315
+#: src/pidgin-libnotify.c:82
+msgid "Only when available"
+msgstr "Apenas quando disponível"
+
+#: src/pidgin-libnotify.c:320
 msgid "Show"
 msgstr "Mostrar"
 
-#: src/pidgin-libnotify.c:347
+#: src/pidgin-libnotify.c:352
 #, c-format
 msgid "%s signed on"
 msgstr "%s ligou-se"
 
-#: src/pidgin-libnotify.c:379
+#: src/pidgin-libnotify.c:384
 #, c-format
 msgid "%s signed off"
 msgstr "%s desligou-se"
 
-#: src/pidgin-libnotify.c:406
+#: src/pidgin-libnotify.c:411
 #, c-format
 msgid "%s says:"
 msgstr "%s diz:"
 
-#: src/pidgin-libnotify.c:572
+#: src/pidgin-libnotify.c:577
 msgid "Libnotify Popups"
 msgstr "Popups Libnotify"
 
-#: src/pidgin-libnotify.c:573
+#: src/pidgin-libnotify.c:578
 msgid "Displays popups via libnotify."
 msgstr "Mostra popups via libnotify."
 
-#: src/pidgin-libnotify.c:574
+#: src/pidgin-libnotify.c:579
 msgid ""
 "Pidgin-libnotify:\n"
 "Displays popups via libnotify."
