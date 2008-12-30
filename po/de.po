@@ -48,7 +48,7 @@ msgstr "%s hat sich angemeldet"
 #: src/pidgin-libnotify.c:379
 #, c-format
 msgid "%s signed off"
-msgstr "%s hat sich angemeldet"
+msgstr "%s hat sich abgemeldet"
 
 #: src/pidgin-libnotify.c:406
 #, c-format
