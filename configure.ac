@@ -36,7 +36,7 @@ AH_BOTTOM([
 AC_PROG_INTLTOOL
 GETTEXT_PACKAGE=pidgin-libnotify
 AC_SUBST(GETTEXT_PACKAGE)
-ALL_LINGUAS="es fr it nl pl pt pt_BR sl hu zh_CN ro gl ru bg de sv"
+ALL_LINGUAS="bg cs de es fr gl hu it nl pl pt pt_BR ro ru sl sv zh_CN"
 AM_GLIB_GNU_GETTEXT
 
 #
