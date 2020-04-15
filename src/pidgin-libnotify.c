@@ -131,16 +131,10 @@ event_connection_throttle (PurpleConnection *conn, gpointer data)
 }
 
 /* do NOT g_free() the string returned by this function */
-static gchar *
+const static gchar *
 best_name (PurpleBuddy *buddy)
 {
-	if (buddy->alias) {
-		return buddy->alias;
-	} else if (buddy->server_alias) {
-		return buddy->server_alias;
-	} else {
-		return buddy->name;
-	}
+  return purple_buddy_get_contact_alias(buddy);
 }
 
 static GdkPixbuf *
