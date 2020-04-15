@@ -27,6 +27,11 @@ $GLIB_GETTEXTIZE --force --copy
 #restore pl/ChangeLog
 mv po/ChangeLog.save po/ChangeLog
 
+# Avoid automake issues
+ln -sf README.md README
+ln -sf LICENSE COPYING
+trap "rm -f README COPYING" EXIT
+
 $AUTORECONF -fiv
 
 echo "Running ./configure $@"

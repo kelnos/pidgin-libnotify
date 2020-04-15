@@ -3,7 +3,7 @@ EXTRA_DIST = \
 		VERSION.in \
 		ChangeLog \
 		NEWS \
-		README \
+		README.md \
 		LICENSE
 
 SUBDIRS = po src
