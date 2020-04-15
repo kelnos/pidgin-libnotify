@@ -4,7 +4,7 @@ EXTRA_DIST = \
 		ChangeLog \
 		NEWS \
 		README \
-		COPYING
+		LICENSE
 
 SUBDIRS = po src
 
