@@ -280,7 +280,7 @@ notify (const gchar *title,
 		g_free (tr_body);
 		return;
 	}
-	notification = notify_notification_new (title, tr_body, NULL, NULL);
+	notification = notify_notification_new (title, tr_body, "notification-message-im");
 	purple_debug_info (PLUGIN_ID, "notify(), new: "
 					 "title: '%s', body: '%s', buddy: '%s'\n",
 					 title, tr_body, best_name (buddy));
