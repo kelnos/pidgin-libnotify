@@ -171,7 +171,7 @@ action_cb (NotifyNotification *notification,
 	PurpleConversation *conv = NULL;
 
 	purple_debug_info (PLUGIN_ID, "action_cb(), "
-					"notification: 0x%x, action: '%s'", notification, action);
+					"notification: 0x%p, action: '%s'", notification, action);
 
 	buddy = (PurpleBuddy *)g_object_get_data (G_OBJECT(notification), "buddy");
 
@@ -197,7 +197,7 @@ closed_cb (NotifyNotification *notification)
 {
 	PurpleContact *contact;
 
-	purple_debug_info (PLUGIN_ID, "closed_cb(), notification: 0x%x\n", notification);
+	purple_debug_info (PLUGIN_ID, "closed_cb(), notification: 0x%p\n", notification);
 
 	contact = (PurpleContact *)g_object_get_data (G_OBJECT(notification), "contact");
 	if (contact)
@@ -428,13 +428,13 @@ notify_new_message_cb (PurpleAccount *account,
 
 #ifndef DEBUG /* in debug mode, always show notifications */
 	if (conv && purple_conversation_has_focus (conv)) {
-		purple_debug_info (PLUGIN_ID, "Conversation has focus 0x%x\n", conv);
+		purple_debug_info (PLUGIN_ID, "Conversation has focus 0x%p\n", conv);
 		return;
 	}
 #endif
 
 	if (conv && purple_prefs_get_bool ("/plugins/gtk/libnotify/newconvonly")) {
-		purple_debug_info (PLUGIN_ID, "Conversation is not new 0x%x\n", conv);
+		purple_debug_info (PLUGIN_ID, "Conversation is not new 0x%p\n", conv);
 		return;
 	}
 
