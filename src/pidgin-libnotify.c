@@ -558,7 +558,7 @@ static PurplePluginInfo info = {
     NULL,													/* description */
     
     "Duarte Henriques <duarte.henriques@gmail.com>",		/* author */
-    "http://sourceforge.net/projects/gaim-libnotify/",		/* homepage */
+    "https://github.com/kelnos/pidgin-libnotify",		/* homepage */
     
     plugin_load,			/* load */
     plugin_unload,			/* unload */
