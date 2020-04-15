@@ -1,56 +1,34 @@
 #!/bin/sh
 
-(glib-gettextize --version) < /dev/null > /dev/null 2>&1 || {
-	echo;
-	echo "You must have gettext installed to compile pidgin-libnotify";
-	echo;
-	exit;
+set -e
+
+check_installed() {
+    if ! $1 --version </dev/null >/dev/null 2>&1; then
+        echo
+        echo "You must have $1 installed to compile pidgin-libnotify"
+        echo
+        exit 1
+    fi
 }
 
-(libtoolize --version) < /dev/null > /dev/null 2>&1 || {
-	echo;
-	echo "You must have libtool installed to compile pidgin-libnotify";
-	echo;
-	exit;
-}
+[ "$GLIB_GETTEXTIZE" ] || GLIB_GETTEXTIZE=glib-gettextize
+[ "$AUTORECONF" ] || AUTORECONF=autoreconf
 
-(automake --version) < /dev/null > /dev/null 2>&1 || {
-	echo;
-	echo "You must have automake installed to compile pidgin-libnotify";
-	echo;
-	exit;
-}
-
-(autoconf --version) < /dev/null > /dev/null 2>&1 || {
-	echo;
-	echo "You must have autoconf installed to compile pidgin-libnotify";
-	echo;
-	exit;
-}
+check_installed $GLIB_GETTEXTIZE
+check_installed $AUTORECONF
 
 echo "Generating configuration files for pidgin-libnotify, please wait...."
 echo;
 
 # Backup po/ChangeLog because gettext likes to change it
 cp -p po/ChangeLog po/ChangeLog.save
-
 echo "Running gettextize, please ignore non-fatal messages...."
-glib-gettextize --force --copy
-
+$GLIB_GETTEXTIZE --force --copy
 #restore pl/ChangeLog
 mv po/ChangeLog.save po/ChangeLog
 
-echo "Running libtoolize, please ignore non-fatal messages...."
-echo n | libtoolize --copy --force || exit;
-echo;
-
-aclocal || exit;
-autoheader || exit;
-automake --add-missing --copy;
-autoconf || exit;
-automake || exit;
+$AUTORECONF -fiv
 
 echo "Running ./configure $@"
 echo;
 ./configure $@
-
